@@ -1,45 +1,58 @@
-# Final Project Proposal
+### Description of Project:
+A tic tac toe game with options to play 1v1s or in a tournament-style round. The game also saves leaderboard stats.
 
-## Group Members:
+---
 
-Andrew Choi, Benjamin Goihman
+### How It Will Be Used:
+Players will play through the command line. There will be one server started for each game/tournament, and each player will connect through a client to play. The board will be displayed, and the user will enter a row, then column.
 
-# Intentions:
+---
 
-A tic tac toe game, with options to play 1v1’s or in a tournament style round, that also saves leaderboard stats
+### Timeline:
+- **1/10**: Tic tac toe game between two clients  
+- **1/13**: Add sighandler and file data to save a leaderboard of wins  
+- **1/17**: Finish tournament style  
+- **Extra Features** (post-1/17): Connect 4, save game state / resume games  
 
-# Intended usage:
+---
 
-Players will play through the command line, there will be one server started for each game/tournament, then each player will connect through a client and play. The board will be displayed, and the user will enter a row, then column.
+### Technical Design:
+#### Topics from Class:
+1. **Memory Allocation**:  
+   We will use allocated memory for defining any variables, structs, or arrays needed.  
+   
+2. **File Handling**:  
+   We will work with files to save stats of users who play. For example, when a user wins or loses a game, that stat will be saved. Later, we can read the file to see the top players.  
+   
+3. **Signals**:  
+   - Signals will be used to implement extra features like saving the game state before exiting.  
+   - They will also be utilized in the server to handle scenarios where a user disconnects. For example, if a player disconnects mid-game, the server will treat it as a loss, ensuring the game or tournament continues without crashing.  
 
-# Technical Details:
+4. **Pipes**:  
+   Pipes will serve as the main method of communication between different players, building on concepts from the pipe networking lab.  
 
-Topics from class:
+---
 
+### Responsibilities:
 
-We will use allocating memory for defining any variables, structs or arrays we need to use.
+#### **Andrew Choi**:
+- Work on server-side logic to allow communication for tic tac toe across players.  
+- Add the UI to print the tic tac toe board and handle user input.  
+- Implement the Tic Tac Toe game algorithm, including win, loss, and tie detection.  
 
-We will work with files to save stats of users who play meaning when a user wins or loses a game we can save that stat and then later on we can read the file to see top players.
+#### **Benjamin Goihman**:
+- Handle server-side logic for matchmaking users.  
+- Implement server-side logic for progression between matches.  
+- Differentiate between 1v1s and tournament modes on the server side.  
+- Manage tournament stats and the leaderboard.  
 
-Signals - When we implement extra features like saving the game state, signals will be used to save the game state before exiting. They will also be utilized in the server to handle scenarios where a user disconnects. For example, if a player disconnects mid-game, the server will treat it as if they lost, ensuring the game or tournament continues without crashing.
+This division balances the workload while keeping roles clear and aligned with team preferences.
 
-Pipes - this will be the main method of communication between the different players, we will be working off the pipe networking lab
+---
 
-Algorithms and / data structures:
+### Algorithms and Data Structures:
+- **Three-Way Handshake**  
+- **2D Array** for the board  
+- **Algorithm** to detect if a tic tac toe game is tied/won/lost  
+- **Tournament Matcher** to handle odd numbers of players  
 
-
-We will be using the three way handshake
-
-2d array for the board
-
-Algorithm to detect if tic tac toe game is tied/won/lost
-
-Tournament matcher and deal with odd amount of players
-
-
-# Intended pacing:
-
-Tic tac toe game between two clients 1/10
-Add sighandler and file data to save a leaderboard of wins1/13
-Finish tournament style 1/17
-Add extra features - save game state / resume games

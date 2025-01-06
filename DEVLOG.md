@@ -12,8 +12,8 @@ Expanded description including how much time was spent on task.
 
 ## Benjamin Goihman
 
-### 2024-01-02 - Brief description
-Expanded description including how much time was spent on task.
+### 2024-01-02 - Work on PROPOSAL.md
+Refreshed MD on proposal.md, adding clarifaciton and more specfic from the orginal google doc. 5 minutes
 
 ### 2024-01-03 - Brief description
 Expanded description including how much time was spent on task.
