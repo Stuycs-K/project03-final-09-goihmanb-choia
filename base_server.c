@@ -9,6 +9,9 @@ void sighandler(int signo) {
     }
 }
 
+void write_stats(int wol,char user[500]){} //for win or lose
+
+
 int main() {
     signal(SIGINT, sighandler);
     srand(time(NULL));
