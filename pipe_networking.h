@@ -22,6 +22,15 @@
 #define EXIT 4
 
 
+struct message {
+    int sender;
+    int over;
+    int won;
+    char player;
+    int row;
+    int col;
+};
+
 int server_handshake(int *to_client);
 int client_handshake(int *to_server);
 
