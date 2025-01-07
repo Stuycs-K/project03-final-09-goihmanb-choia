@@ -12,9 +12,10 @@ Expanded description including how much time was spent on task.
 
 ## Benjamin Goihman
 
-### 2024-01-02 - Work on PROPOSAL.md
+### 2025-01-07 - Work on PROPOSAL.md
 Refreshed MD on proposal.md, adding clarifaciton and more specfic from the orginal google doc. 5 minutes
-added server code from my lab, as base for forking
+added server code from my lab, as base for forking - 10 min
+added client skeleton code and game skeleton - 20 min 
 
 ### 2024-01-03 - Brief description
 Expanded description including how much time was spent on task.
