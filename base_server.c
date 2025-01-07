@@ -11,10 +11,6 @@ void sighandler(int signo) {
 
 void write_stats(int wol,char user[500]){} //for win or lose
 
-int check_board(int board [][]) {} // Check to see if the game is over (3 in a row)
-
-char * get_display(int board [][]) {} // Format the board into a string to display to the user.
-
 char * display_leaderboard (FILE * f) {} // Return the string for the leaderboard.
 
 
@@ -26,7 +22,7 @@ int main() {
         printf("\n[server] waiting for client connection\n");
         mkfifo(WKP, 0644);
         int from_client = server_setup();
-        
+
         int f = fork();
         if (f > 0) {
             close(from_client);
