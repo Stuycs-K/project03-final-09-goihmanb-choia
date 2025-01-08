@@ -21,15 +21,20 @@ int main() {
     srand(time(NULL));
     int frm[100];
     int to[100];
-    int i = 0;
-    while (i < 2) {
+    int z = 0;
+    while (z < 1) {
         printf("\n[server] waiting for client connection\n");
         int from_client = server_setup();
         int to_client;
         server_handshake_half(&to_client, from_client);
-        frm[i] = from_client;
-        to[i] = to_client;
-        i++;
+        frm[z] = from_client;
+        to[z] = to_client;
+        z++;
+    }
+    char buffer[100] = "test2";
+    for (int i=0;i<2;i++){
+        printf("Wrote too %d for %d\n",to[i],i);
+        write(to[i],buffer,100);
     }
     printf("FROMS %d %d\n",frm[0],frm[1]);
     printf("TOS %d, %d\n\n", to[0],to[1]);

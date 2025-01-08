@@ -16,7 +16,16 @@ int main() {
     int from_server;
     pid_t my_pid = getpid();
     to_server = client_handshake(&from_server);
+    printf("In server %d\n",to_server);
     // game_loop(to_server, from_server, my_pid);
+    char buffer[100];
+    buffer[0]=-1;
+    while(buffer[0]==-1){
+        if(read(from_server,buffer,100)<=0){
+                printf("%s",strerror(errno));
+        }
+    }
+    printf("%s\n",buffer);
     return 0;
 }
 
