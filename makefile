@@ -15,7 +15,7 @@ client: cl
 	@./cl
 
 base_client.o: base_client.c pipe_networking.h base_client.h game.h
-	@gcc -c basic_client.c
+	@gcc -c base_client.c
 
 base_server.o: base_server.c pipe_networking.h base_server.h game.h
 	@gcc -c base_server.c

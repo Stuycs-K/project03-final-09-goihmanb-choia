@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "game.h": "c",
-        "pipe_networking.h": "c"
+        "pipe_networking.h": "c",
+        "stdio.h": "c"
     }
 }

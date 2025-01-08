@@ -14,40 +14,28 @@ void sighandler(int signo) {
 
 void write_stats(int wol,char user[500]){} //for win or lose
 
-char * display_leaderboard (FILE * f) {} // Return the string for the leaderboard.
 
 
 int main() {
     signal(SIGINT, sighandler);
     srand(time(NULL));
-
-    while (1) {
+    int frm[100];
+    int to[100];
+    int i = 0;
+    while (i < 2) {
         printf("\n[server] waiting for client connection\n");
-        mkfifo(WKP, 0644);
         int from_client = server_setup();
-
-        int f = fork();
-        if (f > 0) {
-            close(from_client);
-            continue;
-        }
-        else if (f == 0) {
-            int to_client;
-            if (server_handshake_half(&to_client, from_client) != -1) {
-                while (1) {
-                    int random_num = rand() % 101;
-                    printf("[subserver %d] sending: %d\n", getpid(), random_num);
-                    if (write(to_client, &random_num, sizeof(int)) == -1) {
-                        printf("[subserver %d] client disconnected\n", getpid());
-                        break;
-                    }
-                    sleep(1);
-                }
-            }
-            close(from_client);
-            close(to_client);
-            return 0;
-        }
+        int to_client;
+        server_handshake_half(&to_client, from_client);
+        frm[i] = from_client;
+        to[i] = to_client;
+        i++;
     }
+    printf("FROMS %d %d\n",frm[0],frm[1]);
+    printf("TOS %d, %d\n\n", to[0],to[1]);
+    close(frm[0]);
+    close(frm[1]);
+    close(to[0]);
+    close(to[1]);
     return 0;
 }
