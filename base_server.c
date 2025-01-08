@@ -1,6 +1,9 @@
 #include "pipe_networking.h"
 #include <signal.h>
 #include <time.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 void sighandler(int signo) {
     if (signo == SIGINT) {
