@@ -17,4 +17,5 @@ Refreshed MD on proposal.md, adding clarifaciton and more specfic from the orgin
 added server code from my lab, as base for forking - 10 min
 
 ### 2025-01-07 - Work on skeleton code
-added client skeleton code and game skeleton - 20 min 
+added client skeleton code and game skeleton - 20 min
+added correct imports and other needed funcs for base server and client - 8 min

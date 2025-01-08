@@ -11,6 +11,16 @@ void game_loop(int to_server, int from_server, pid_t my_pid) {
     }
 }
 
+int main() {
+    int to_server;
+    int from_server;
+    pid_t my_pid = getpid();
+    to_server = client_handshake(&from_server);
+    game_loop(to_server, from_server, my_pid);
+    return 0;
+}
+
+
 int checkforcond(int plyr, int board[3][3]){
     //Return 1 if plyr won, 0 if continue playing, -1 if lost, -2 if tied. To be called after plyr made thier move
 }
