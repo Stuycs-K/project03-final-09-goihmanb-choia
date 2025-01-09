@@ -11,16 +11,45 @@ void game_loop(int to_server, int from_server, pid_t my_pid) {
     }
 }
 
+char * format_brd(int board[3][3], char ret[1000]){
+    int index = 0;
+    for(int i = 0; i<3;i++){
+        for(int j = 0; j<3;j++){
+            if(board[i][j]==X){
+                ret[index++] = 'X'; // To keep track of wehre 
+            }
+            if (board[i][j]==O){
+                ret[index++] = 'O';
+            }
+            else{
+                ret[index++]=' ';
+            }
+            if(j!=2){ret[index++]='|';}
+        }
+        if(i!=2){
+            ret[index++] = '\n';
+            ret[index++]='-';
+            ret[index++]='-';
+            ret[index++]='-';
+            ret[index++]='-';
+            ret[index++]='-';
+            ret[index++]='-';
+            ret[index++]='-';
+            ret[index++]='-';
+            ret[index++] = '\n';
+
+        }
+    }
+            ret[index++] = '\n';
+
+    return ret;
+}
 int main() {
     int to_server;
     int from_server;
     pid_t my_pid = getpid();
     from_server = client_handshake(&to_server);
-<<<<<<< HEAD
-    printf("In server %d\n",to_server);
-=======
-    printf("From server %d\n",from_server);
->>>>>>> f0792810dfddd0325cd3b77388d1fd313418f53f
+    printf("In client %d\n",to_server);
     // game_loop(to_server, from_server, my_pid);
     char buffer[100];
     if(read(from_server,buffer,100)<=0){
@@ -28,6 +57,13 @@ int main() {
     }
     printf("%s\n",buffer);
     return 0;
+    int board[3][3] = {
+        {1,0,1},
+        {1,0,-1},
+        {1,1,1}
+    };
+    char ret[1000];
+    printf("%s",format_brd(board,ret));
 }
 
 
@@ -35,8 +71,5 @@ int checkforcond(int plyr, int board[3][3]){
     //Return 1 if plyr won, 0 if continue playing, -1 if lost, -2 if tied. To be called after plyr made thier move
 }
 
-char * format_brd(int board[3][3]){
-    //Prints board nicely with X's and 0's
-}
 
 char * display_leaderboard (FILE * f) {} // Return the string for the leaderboard.
