@@ -3,12 +3,23 @@
 
 void game_loop(int to_server, int from_server, pid_t my_pid) {
     struct game_move move;
-
-    while(1) {
-
-        // Gets the move from user, then cehck for win/tie,sends move, gets reponse and llops
-
+    if(read(from_server,&move,sizeof(struct game_move))<=0){
+            printf("%s",strerror(errno));
     }
+    if (move.ismove == YOUR_TURN) {
+      printf("Sending my move, first move\n");
+      move.row = 1;
+      move.col = 1;
+      write(to_server, &move, sizeof(struct game_move));
+    } else {
+      printf("I go second\n");
+      read(from_server, &move,sizeof(struct game_move));
+      printf("Received move from client, %d %d", move.row, move.col);
+    }
+    // while(1) {
+    //     // Gets the move from user, then cehck for win/tie,sends move, gets reponse and llops
+    //
+    // }
 }
 
 int main() {
@@ -17,12 +28,7 @@ int main() {
     pid_t my_pid = getpid();
     from_server = client_handshake(&to_server);
     printf("From server %d\n",from_server);
-    // game_loop(to_server, from_server, my_pid);
-    char buffer[100];
-    if(read(from_server,buffer,100)<=0){
-            printf("%s",strerror(errno));
-    }
-    printf("%s\n",buffer);
+    game_loop(to_server, from_server, my_pid);
     return 0;
 }
 
