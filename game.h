@@ -8,11 +8,15 @@
 #define O 0
 #define X 1
 
+#define YOUR_TURN 3
+#define OPPONENT_TURN 4
+
+
 struct game_move {
 	int row;
 	int col;
 	int msg_type;
-	int pid;
+	int ismove;
 };
 
 struct game_pipes {
