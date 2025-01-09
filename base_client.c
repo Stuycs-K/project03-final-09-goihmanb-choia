@@ -15,7 +15,7 @@ int main() {
     int to_server;
     int from_server;
     pid_t my_pid = getpid();
-    to_server = client_handshake(&from_server);
+    from_server = client_handshake(&to_server);
     printf("In server %d\n",to_server);
     // game_loop(to_server, from_server, my_pid);
     char buffer[100];

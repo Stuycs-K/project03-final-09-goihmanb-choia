@@ -22,7 +22,7 @@ int main() {
     int frm[100];
     int to[100];
     int z = 0;
-    while (z < 1) {
+    while (z < 2) {
         printf("\n[server] waiting for client connection\n");
         int from_client = server_setup();
         int to_client;
