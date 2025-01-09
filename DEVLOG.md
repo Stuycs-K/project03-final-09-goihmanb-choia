@@ -20,3 +20,7 @@ added server code from my lab, as base for forking - 10 min
 ### 2025-01-07 - Work on skeleton code
 added client skeleton code and game skeleton - 20 min
 added correct imports and other needed funcs for base server and client - 8 min
+
+### 2025-01-08 - Work tic tac toe formatting
+added formattig and prinint of the tictactoe board - 10 min
+
