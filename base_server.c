@@ -24,16 +24,15 @@ int main() {
     int z = 0;
     while (z < 2) {
         printf("\n[server] waiting for client connection\n");
-        int from_client = server_setup();
-        int to_client;
-        server_handshake_half(&to_client, from_client);
+        int from_client, to_client;
+        from_client = server_handshake(&to_client);
         frm[z] = from_client;
         to[z] = to_client;
         z++;
     }
     char buffer[100] = "test2";
-    for (int i=0;i<2;i++){
-        printf("Wrote too %d for %d\n",to[i],i);
+    for (int i=0;i<1;i++){
+        printf("Wrote to %d for %d\n",to[i],i);
         write(to[i],buffer,100);
     }
     printf("FROMS %d %d\n",frm[0],frm[1]);
