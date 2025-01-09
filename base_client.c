@@ -3,11 +3,11 @@
 
 void game_loop(int to_server, int from_server, pid_t my_pid) {
     struct game_move move;
-    
+
     while(1) {
 
         // Gets the move from user, then cehck for win/tie,sends move, gets reponse and llops
-    
+
     }
 }
 
@@ -15,15 +15,12 @@ int main() {
     int to_server;
     int from_server;
     pid_t my_pid = getpid();
-    to_server = client_handshake(&from_server);
-    printf("In server %d\n",to_server);
+    from_server = client_handshake(&to_server);
+    printf("From server %d\n",from_server);
     // game_loop(to_server, from_server, my_pid);
     char buffer[100];
-    buffer[0]=-1;
-    while(buffer[0]==-1){
-        if(read(from_server,buffer,100)<=0){
-                printf("%s",strerror(errno));
-        }
+    if(read(from_server,buffer,100)<=0){
+            printf("%s",strerror(errno));
     }
     printf("%s\n",buffer);
     return 0;
