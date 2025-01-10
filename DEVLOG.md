@@ -33,3 +33,9 @@ added correct imports and other needed funcs for base server and client - 8 min
 
 ### 2025-01-08 - Work tic tac toe formatting
 added formattig and prinint of the tictactoe board - 10 min
+
+### 2025-01-09 - Rember to add
+
+
+### 2025-01-10 - Worked on forking server
+allowed for multiple clients to play at once on subservers and then subserver with exit code return winner
