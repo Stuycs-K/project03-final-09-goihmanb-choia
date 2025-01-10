@@ -17,6 +17,9 @@ Worked on planning out the communication for the tournament style game with the 
 ### 2024-01-09 - Seever client interaction
 Enabled communication between the two clients through a server, where a client knows if it is it's turn, then sends a move to the server which sends the move to the other client.
 
+### 2024-01-10 - Server client constant communication
+Enabled the clients to constantly send moves to eachother until one exits through a main server - 20 mins.
+
 
 ## Benjamin Goihman
 
@@ -30,4 +33,3 @@ added correct imports and other needed funcs for base server and client - 8 min
 
 ### 2025-01-08 - Work tic tac toe formatting
 added formattig and prinint of the tictactoe board - 10 min
-
