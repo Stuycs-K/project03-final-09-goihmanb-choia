@@ -86,7 +86,16 @@ int main() {
     }
     int matches = 0;
     while (matches < (z%2)){
-
+        int plyrs[2];
+        for(int i = 0; i < 2; i++){
+            for(int j =0; j < 100; j++){
+                if(alive[j]==alive_stat){
+                    alive[j]--;
+                    plyrs[i]=j;
+                    break;
+                }
+            }
+        }
     }
     return 0;
 }
