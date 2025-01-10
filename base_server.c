@@ -37,12 +37,18 @@ int main() {
     game_move_array[1].ismove = OPPONENT_TURN;
     for (int i=0;i<2;i++){
         printf("Wrote to %d\n",to[i]);
-        write(to[i], &game_move_array[i],sizeof(struct game_move));
+        write(to[i], &game_move_array[i],GS);
     }
     struct game_move curr_move;
-    read(frm[0], &curr_move, sizeof(struct game_move));
-    printf("Server got move %d %d \n", curr_move.row, curr_move.col);
-    write(to[1], &curr_move, sizeof(struct game_move));
+    while(1) {
+      read(frm[0], &curr_move, GS);
+      printf("Server got move %d %d \n", curr_move.row, curr_move.col);
+      write(to[1], &curr_move, GS);
+      read(frm[1], &curr_move, GS);
+      printf("Server got move %d %d \n", curr_move.row, curr_move.col);
+      write(to[0], &curr_move, GS);
+      sleep(1);
+    }
     // printf("FROMS %d %d\n",frm[0],frm[1]);
     // printf("TOS %d, %d\n\n", to[0],to[1]);
     close(frm[0]);

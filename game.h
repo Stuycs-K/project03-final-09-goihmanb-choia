@@ -11,6 +11,8 @@
 #define YOUR_TURN 3
 #define OPPONENT_TURN 4
 
+#define GS sizeof(struct game_move)
+
 
 struct game_move {
 	int row;
