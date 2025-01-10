@@ -51,6 +51,8 @@ int main() {
     int frm[100];
     int to[100];
     int z = 0;
+    int alive[100];
+    int alive_stat = 122;
     while (z < 4) {
         printf("\n[server] waiting for client connection\n");
         int from_client, to_client;
@@ -58,6 +60,7 @@ int main() {
         frm[z] = from_client;
         to[z] = to_client;
         z++;
+        alive[z] = alive_stat;
     }
     int q = 0;
     for (int i = 0; i < z; i+=2){
@@ -69,13 +72,21 @@ int main() {
     }
     int status;
     pid_t child_pid;
+    alive_stat--;
+    z = 0;
     while ((child_pid = wait(&status)) > 0) {
     if (WIFEXITED(status)) {
         int return_value = WEXITSTATUS(status);
+        alive[return_value] = alive_stat;
         printf("Child process %d exited with return value: %d\n", child_pid, return_value);
+        z++;
     } else {
         printf("Child process %d did not terminate normally.\n", child_pid);
     }
-}
+    }
+    int matches = 0;
+    while (matches < (z%2)){
+
+    }
     return 0;
 }
