@@ -5,8 +5,8 @@
 #define MOVE_WIN 1
 #define MOVE_LOSE -1
 #define MOVE_TIE 2
-#define O 0
-#define X 1
+#define O 2
+#define X 3
 
 #define YOUR_TURN 3
 #define OPPONENT_TURN 4
@@ -19,6 +19,8 @@ struct game_move {
 	int col;
 	int msg_type;
 	int ismove;
+	// 0 for false, 1 for true
+	int won;
 };
 
 struct game_pipes {

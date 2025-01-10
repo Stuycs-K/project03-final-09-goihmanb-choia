@@ -2,33 +2,38 @@
 #include "game.h"
 
 void game_loop(int to_server, int from_server, pid_t my_pid) {
-    struct game_move move;
-    if(read(from_server,&move,GS)<=0){
-            printf("%s",strerror(errno));
+  int board[3][3];
+  struct game_move move;
+  if(read(from_server,&move,GS)<=0){
+          printf("%s",strerror(errno));
+  }
+  if (move.ismove == YOUR_TURN) {
+    printf("Sending my move, first move\n");
+    char rowbuff [10];
+    char colbuff [10];
+    char *endptr;
+    printf("Enter the row, from 1 to 3: \n");
+    r = fgets(rowbuff, sizeof(r), stdin);
+    printf("Enter the column, from 1 to 3: \n");
+    c = fgets(colbuff, sizeof(c), stdin);
+    int r = strtol(str, &endptr, 10);
+    int c = strtol(str, &endptr, 10);
+    move.row = r;
+    move.col = c;
+    //FIX
+    board[r][c] = move.msg_type;
+    write(to_server, &move, GS);
+  }
+  while(1) {
+    if(read(from_server, &move, GS) < 0) {
+      printf("%s\n", strerror(errno));
     }
-    if (move.ismove == YOUR_TURN) {
-      printf("Sending my move, first move\n");
-      move.row = 1;
-      move.col = 1;
-      write(to_server, &move, GS);
-    }
-    // } else {
-    //   printf("I go second\n");
-    //   read(from_server, &move,sizeof(struct game_move));
-    //   printf("Received move from client, %d %d", move.row, move.col);
-    // }
-    while(1) {
-      // printf("Im trying to read\n");
-      // Gets the move from user, then cehck for win/tie,sends move, gets reponse and llops
-      if(read(from_server, &move, GS) < 0) {
-        printf("%s\n", strerror(errno));
-      }
-      printf("Received move from client, %d %d\n", move.row, move.col);
-      move.row = (move.row + 1) % 3;
-      move.col = (move.col + 1) % 3;
-      write(to_server, &move, GS);
-      printf("Sending move to client, %d %d\n", move.row, move.col);
-    }
+    printf("Received move from client, %d %d\n", move.row, move.col);
+    move.row = (move.row + 1) % 3;
+    move.col = (move.col + 1) % 3;
+    write(to_server, &move, GS);
+    printf("Sending move to client, %d %d\n", move.row, move.col);
+  }
 }
 
 char * format_brd(int board[3][3], char ret[1000]){
