@@ -18,7 +18,8 @@ Worked on planning out the communication for the tournament style game with the 
 Enabled communication between the two clients through a server, where a client knows if it is it's turn, then sends a move to the server which sends the move to the other client.
 
 ### 2024-01-10 - Server client constant communication
-Enabled the clients to constantly send moves to eachother until one exits through a main server - 20 mins.
+Enabled the clients to constantly send moves to each other until one exits through a main server - 20 mins.
+Worked on sending game moves and storing and displaying the board for each client.
 
 
 ## Benjamin Goihman
