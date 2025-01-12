@@ -19,7 +19,9 @@ int play_game(int frm1, int frm2, int to1, int to2, int who){
     struct game_move game_move_array[2];
     // add a for loop with %2 later
     game_move_array[0].ismove = YOUR_TURN;
+    game_move_array[0].msg_type = O;
     game_move_array[1].ismove = OPPONENT_TURN;
+    game_move_array[1].msg_type = X;
     printf("Wrote to %d\n",to1);
     write(to1, &game_move_array[0],GS);
     printf("Wrote to %d\n",to1);
@@ -34,10 +36,7 @@ int play_game(int frm1, int frm2, int to1, int to2, int who){
       read(frm2, &curr_move, GS);
       printf("Server %d got move %d %d \n", who, curr_move.row, curr_move.col);
       write(to1, &curr_move, GS);
-      sleep(1);
-      break;
     }
-
     close(frm1);
     close(frm2);
     close(to1);
@@ -53,7 +52,7 @@ int main() {
     int z = 0;
     int alive[100];
     int alive_stat = 122;
-    while (z < 4) {
+    while (z < 2) {
         printf("\n[server] waiting for client connection\n");
         int from_client, to_client;
         from_client = server_handshake(&to_client);
@@ -64,7 +63,7 @@ int main() {
     }
     int q = 0;
     for (int i = 0; i < z; i+=2){
-            pid_t pid = fork();
+        pid_t pid = fork();
         if (pid==0){
             q = play_game(frm[i],frm[i+1],to[i],to[i+1],1);
             exit(q+i);

@@ -5,8 +5,8 @@
 #define MOVE_WIN 1
 #define MOVE_LOSE -1
 #define MOVE_TIE 2
-#define O 2
-#define X 3
+#define O 4
+#define X 5
 
 #define YOUR_TURN 3
 #define OPPONENT_TURN 4
