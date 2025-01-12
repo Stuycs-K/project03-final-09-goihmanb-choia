@@ -17,6 +17,15 @@ Worked on planning out the communication for the tournament style game with the 
 ### 2024-01-09 - Seever client interaction
 Enabled communication between the two clients through a server, where a client knows if it is it's turn, then sends a move to the server which sends the move to the other client.
 
+### 2024-01-10 - Server client constant communication
+Enabled the clients to constantly send moves to each other until one exits through a main server - 20 mins.
+Worked on sending game moves and storing and displaying the board for each client.
+
+### 2024-01-10 - Client gameplay
+Clients can now take user input to send moves to the other client.
+Clients also display the move, now need to add game logic and index checking
+Also need to add exit code for winner
+
 
 ## Benjamin Goihman
 
@@ -31,3 +40,12 @@ added correct imports and other needed funcs for base server and client - 8 min
 ### 2025-01-08 - Work tic tac toe formatting
 added formattig and prinint of the tictactoe board - 10 min
 
+### 2025-01-09 - Rember to add
+
+
+### 2025-01-10 - Worked on forking server
+allowed for multiple clients to play at once on subservers and then subserver with exit code return winner
+
+### 2025-01-11 - Worked on forking server
+First attempt at matchmaking the players, inclduing routing users to play against each other.
+Fix keeping track of alive players and use new method for that.

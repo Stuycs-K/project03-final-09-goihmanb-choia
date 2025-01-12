@@ -18,7 +18,9 @@ void write_stats(int wol,char user[500]){} //for win or lose
 int play_game(int frm1, int frm2, int to1, int to2, int who){
     struct game_move game_move_array[2];
     game_move_array[0].ismove = YOUR_TURN;
+    game_move_array[0].msg_type = O;
     game_move_array[1].ismove = OPPONENT_TURN;
+    game_move_array[1].msg_type = X;
     printf("Wrote to %d\n",to1);
     write(to1, &game_move_array[0],GS);
     printf("Wrote to %d\n",to1);
@@ -48,7 +50,6 @@ int play_game(int frm1, int frm2, int to1, int to2, int who){
       sleep(1);
     //   break;
     }
-
     close(frm1);
     close(frm2);
     close(to1);

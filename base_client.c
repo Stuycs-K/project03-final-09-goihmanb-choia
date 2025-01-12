@@ -1,34 +1,34 @@
 #include "pipe_networking.h"
 #include "game.h"
+#include "base_client.h"
 
 void game_loop(int to_server, int from_server, pid_t my_pid) {
-    struct game_move move;
-    if(read(from_server,&move,GS)<=0){
-            printf("%s",strerror(errno));
+  int board[3][3];
+  for(int i = 0; i < 3; i++) {
+    for(int j = 0; j < 3; j++) {
+        board[i][j] = 0;
     }
-    if (move.ismove == YOUR_TURN) {
-      printf("Sending my move, first move\n");
-      move.row = 1;
-      move.col = 1;
-      write(to_server, &move, GS);
+  }
+  char display [1000];
+  struct game_move move;
+  if(read(from_server,&move,GS)<=0){
+          printf("%s",strerror(errno));
+  }
+  int my_character = move.msg_type;
+  int opp_character = (my_character == O) ? X : O;
+  if (move.ismove == YOUR_TURN) {
+    write_to_server(move, board, to_server, my_character);
+  }
+  while(1) {
+    if(read(from_server, &move, GS) < 0) {
+      printf("%s\n", strerror(errno));
     }
-    // } else {
-    //   printf("I go second\n");
-    //   read(from_server, &move,sizeof(struct game_move));
-    //   printf("Received move from client, %d %d", move.row, move.col);
-    // }
-    while(1) {
-      // printf("Im trying to read\n");
-      // Gets the move from user, then cehck for win/tie,sends move, gets reponse and llops
-      if(read(from_server, &move, GS) < 0) {
-        printf("%s\n", strerror(errno));
-      }
-      printf("Received move from client, %d %d\n", move.row, move.col);
-      move.row = (move.row + 1) % 3;
-      move.col = (move.col + 1) % 3;
-      write(to_server, &move, GS);
-      printf("Sending move to client, %d %d\n", move.row, move.col);
-    }
+    board[move.row][move.col] = opp_character;
+    // printf("Received move from client, %d %d\n", move.row, move.col);
+    format_brd(board, display);
+    write_to_server(move, board, to_server, my_character);
+    // printf("Sending move to client, %d %d\n", move.row, move.col);
+  }
 }
 
 char * format_brd(int board[3][3], char ret[1000]){
@@ -38,13 +38,15 @@ char * format_brd(int board[3][3], char ret[1000]){
             if(board[i][j]==X){
                 ret[index++] = 'X'; // To keep track of wehre
             }
-            if (board[i][j]==O){
+            else if (board[i][j]==O){
                 ret[index++] = 'O';
             }
-            else{
+            else {
                 ret[index++]=' ';
             }
-            if(j!=2){ret[index++]='|';}
+            if(j!=2){
+              ret[index++]='|';
+            }
         }
         if(i!=2){
             ret[index++] = '\n';
@@ -55,14 +57,30 @@ char * format_brd(int board[3][3], char ret[1000]){
             ret[index++]='-';
             ret[index++]='-';
             ret[index++]='-';
-            ret[index++]='-';
             ret[index++] = '\n';
 
         }
     }
-            ret[index++] = '\n';
-
+    ret[index++] = '\n';
+    ret[index] = '\0';
+    printf("%s", ret);
     return ret;
+}
+
+void write_to_server(struct game_move move, int (*board)[3], int to_server, int my_character) {
+  char rowbuff [10];
+  char colbuff [10];
+  char *endptr;
+  printf("Enter the row, from 1 to 3: \n");
+  fgets(rowbuff, sizeof(rowbuff), stdin);
+  printf("Enter the column, from 1 to 3: \n");
+  fgets(colbuff, sizeof(colbuff), stdin);
+  int r = strtol(rowbuff, &endptr, 10);
+  int c = strtol(colbuff, &endptr, 10);
+  move.row = r - 1;
+  move.col = c - 1;
+  board[r - 1][c - 1] = my_character;
+  write(to_server, &move, GS);
 }
 int main() {
     int to_server;
