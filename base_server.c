@@ -29,12 +29,24 @@ int play_game(int frm1, int frm2, int to1, int to2, int who){
     while(1) {
       read(frm1, &curr_move, GS);
       printf("Server %d got move %d %d \n", who, curr_move.row, curr_move.col);
+      if (curr_move.msg_type == MOVE_WIN) {
+        printf("Player %d wins!\n", who);
+        write(to1, &curr_move, GS);
+        write(to2, &curr_move, GS);
+        return 0;
+      }
       write(to2, &curr_move, GS);
       read(frm2, &curr_move, GS);
       printf("Server %d got move %d %d \n", who, curr_move.row, curr_move.col);
+        if (curr_move.msg_type == MOVE_WIN) {
+            printf("Player %d wins!\n", who);
+            write(to1, &curr_move, GS);
+            write(to2, &curr_move, GS);
+            return 0;
+        }
       write(to1, &curr_move, GS);
       sleep(1);
-      break;
+    //   break;
     }
 
     close(frm1);
