@@ -45,3 +45,7 @@ added formattig and prinint of the tictactoe board - 10 min
 
 ### 2025-01-10 - Worked on forking server
 allowed for multiple clients to play at once on subservers and then subserver with exit code return winner
+
+### 2025-01-11 - Worked on forking server
+First attempt at matchmaking the players, inclduing routing users to play against each other.
+Fix keeping track of alive players and use new method for that.
