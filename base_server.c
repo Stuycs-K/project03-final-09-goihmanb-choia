@@ -17,7 +17,6 @@ void write_stats(int wol,char user[500]){} //for win or lose
 
 int play_game(int frm1, int frm2, int to1, int to2, int who){
     struct game_move game_move_array[2];
-    // add a for loop with %2 later
     game_move_array[0].ismove = YOUR_TURN;
     game_move_array[0].msg_type = O;
     game_move_array[1].ismove = OPPONENT_TURN;
@@ -49,52 +48,74 @@ int main() {
     srand(time(NULL));
     int frm[100];
     int to[100];
-    int z = 0;
-    int alive[100];
-    int alive_stat = 122;
-    while (z < 2) {
-        printf("\n[server] waiting for client connection\n");
+    int player_count = 0;
+    int round = 1;
+    int *active_players = calloc(100, sizeof(int));
+    int alive_state = 0; 
+    
+    printf("Waiting for players to connect...\n");
+    while (player_count < 4) { 
+        printf("\n[server] waiting for client connection %d/4\n", player_count + 1);
         int from_client, to_client;
         from_client = server_handshake(&to_client);
-        frm[z] = from_client;
-        to[z] = to_client;
-        z++;
-        alive[z] = alive_stat;
+        frm[player_count] = from_client;
+        to[player_count] = to_client;
+        active_players[player_count] = alive_state;
+        player_count++;
     }
-    int q = 0;
-    for (int i = 0; i < z; i+=2){
-        pid_t pid = fork();
-        if (pid==0){
-            q = play_game(frm[i],frm[i+1],to[i],to[i+1],1);
-            exit(q+i);
-        }
-    }
-    int status;
-    pid_t child_pid;
-    alive_stat--;
-    z = 0;
-    while ((child_pid = wait(&status)) > 0) {
-    if (WIFEXITED(status)) {
-        int return_value = WEXITSTATUS(status);
-        alive[return_value] = alive_stat;
-        printf("Child process %d exited with return value: %d\n", child_pid, return_value);
-        z++;
-    } else {
-        printf("Child process %d did not terminate normally.\n", child_pid);
-    }
-    }
-    int matches = 0;
-    while (matches < (z%2)){
-        int plyrs[2];
-        for(int i = 0; i < 2; i++){
-            for(int j =0; j < 100; j++){
-                if(alive[j]==alive_stat){
-                    alive[j]--;
-                    plyrs[i]=j;
+    
+    int players_remaining = player_count;
+    printf("Tournament starting with %d players!\n", player_count);
+    
+    while (players_remaining > 1) {
+        printf("\n=== Round %d ===\n", round);
+        
+        for (int i = 0; i < player_count; i++) {
+            if (active_players[i] != alive_state) continue;
+            
+            int opponent = -1;
+            for (int j = i + 1; j < player_count; j++) {
+                if (active_players[j] == alive_state) {
+                    opponent = j;
                     break;
                 }
             }
+            
+            if (opponent != -1) {
+                int pid = fork();
+                if (pid == 0) {
+                    int result = play_game(frm[i], frm[opponent], to[i], to[opponent], i);
+                    int win_idx = result == 0 ? i : opponent;
+                    exit(win_idx);
+                }
+                active_players[i] = -1;
+                active_players[opponent] = -1;
+            }
+        }
+        
+        int matches = players_remaining / 2;
+        alive_state++; 
+        
+        for (int i = 0; i < matches; i++) {
+            int status;
+            pid_t wpid = wait(&status);
+            if (WIFEXITED(status)) {
+                int winner_idx = WEXITSTATUS(status);
+                active_players[winner_idx] = alive_state;  
+                players_remaining--;
+            }
+        }
+        
+        round++;
+    }
+    
+    for (int i = 0; i < player_count; i++) {
+        if (active_players[i]) {
+            printf("Player %d wins the tournament!\n", i + 1);
+            break;
         }
     }
+    
+    free(active_players);
     return 0;
 }
