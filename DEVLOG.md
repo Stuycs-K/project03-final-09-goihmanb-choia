@@ -21,6 +21,11 @@ Enabled communication between the two clients through a server, where a client k
 Enabled the clients to constantly send moves to each other until one exits through a main server - 20 mins.
 Worked on sending game moves and storing and displaying the board for each client.
 
+### 2024-01-10 - Client gameplay
+Clients can now take user input to send moves to the other client.
+Clients also display the move, now need to add game logic and index checking
+Also need to add exit code for winner
+
 
 ## Benjamin Goihman
 
