@@ -27,7 +27,8 @@ void game_loop(int to_server, int from_server, pid_t my_pid) {
     // printf("Received move from client, %d %d\n", move.row, move.col);
     format_brd(board, display);
     write_to_server(move, board, to_server, my_character);
-    move.win = checkforcond(my_character, board, move);
+    move.won = checkforcond(my_character, board, move);
+    if(move.won == MOVE_WIN) printf("I WON\n");
     // printf("Sending move to client, %d %d\n", move.row, move.col);
   }
 }
