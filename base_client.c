@@ -27,7 +27,7 @@ void game_loop(int to_server, int from_server, pid_t my_pid) {
     // printf("Received move from client, %d %d\n", move.row, move.col);
     format_brd(board, display);
     write_to_server(move, board, to_server, my_character);
-    checkforcond(my_character, board, move);
+    move.win = checkforcond(my_character, board, move);
     // printf("Sending move to client, %d %d\n", move.row, move.col);
   }
 }
@@ -103,6 +103,21 @@ int main() {
 
 //Return 1 if plyr won, 0 if continue playing, -2 if tied. To be called after plyr made thier move
 int checkforcond(int plyr, int board[3][3], struct game_move move){
+  int row = move.row;
+  int col = move.col;
+  int vert_check = 1;
+  int horizontal_check = 1;
+  for(int r = 0; r < 3; r++) {
+    for(int c = 0; c < 3; c++) {
+      if(r == row && board[r][c] != plyr) horizontal_check = 0;
+      if(c == col && board[r][c] != plyr) vert_check = 0;
+    }
+  }
+  if(vert_check || horizontal_check) return MOVE_WIN;
+
+  if(board[0][0] == plyr && board[1][1] == plyr && board[2][2] == plyr) return MOVE_WIN;
+  if(board[2][0] == plyr && board[1][1] == plyr && board[0][2] == plyr) return MOVE_WIN;
+
   // check for draw
   int isdraw = 1;
   for (int r = 0; r < 3; r++) {
@@ -110,8 +125,7 @@ int checkforcond(int plyr, int board[3][3], struct game_move move){
   }
   if(isdraw) return MOVE_TIE;
 
-  int row = move.row;
-  int col = move.col;
+  return MOVE_LOSE;
 }
 
 

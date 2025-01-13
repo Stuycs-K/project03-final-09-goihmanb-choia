@@ -54,7 +54,7 @@ int play_game(int frm1, int frm2, int to1, int to2, int who){
     close(frm2);
     close(to1);
     close(to2);
-    return 1;
+    return 0;
 }
 
 int main() {
