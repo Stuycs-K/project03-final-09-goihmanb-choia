@@ -44,7 +44,7 @@ int play_game(int frm1, int frm2, int to1, int to2, int who){
             printf("Player %d wins!\n", who);
             write(to1, &curr_move, GS);
             write(to2, &curr_move, GS);
-            return 0;
+            return 1;
         }
       write(to1, &curr_move, GS);
       sleep(1);
@@ -65,10 +65,10 @@ int main() {
     int player_count = 0;
     int round = 1;
     int *active_players = calloc(100, sizeof(int));
-    int alive_state = 0; 
-    
+    int alive_state = 0;
+
     printf("Waiting for players to connect...\n");
-    while (player_count < 4) { 
+    while (player_count < 4) {
         printf("\n[server] waiting for client connection %d/4\n", player_count + 1);
         int from_client, to_client;
         from_client = server_handshake(&to_client);
@@ -77,16 +77,16 @@ int main() {
         active_players[player_count] = alive_state;
         player_count++;
     }
-    
+
     int players_remaining = player_count;
     printf("Tournament starting with %d players!\n", player_count);
-    
+
     while (players_remaining > 1) {
         printf("\n=== Round %d ===\n", round);
-        
+
         for (int i = 0; i < player_count; i++) {
             if (active_players[i] != alive_state) continue;
-            
+
             int opponent = -1;
             for (int j = i + 1; j < player_count; j++) {
                 if (active_players[j] == alive_state) {
@@ -94,7 +94,7 @@ int main() {
                     break;
                 }
             }
-            
+
             if (opponent != -1) {
                 int pid = fork();
                 if (pid == 0) {
@@ -106,30 +106,30 @@ int main() {
                 active_players[opponent] = -1;
             }
         }
-        
+
         int matches = players_remaining / 2;
-        alive_state++; 
-        
+        alive_state++;
+
         for (int i = 0; i < matches; i++) {
             int status;
             pid_t wpid = wait(&status);
             if (WIFEXITED(status)) {
                 int winner_idx = WEXITSTATUS(status);
-                active_players[winner_idx] = alive_state;  
+                active_players[winner_idx] = alive_state;
                 players_remaining--;
             }
         }
-        
+
         round++;
     }
-    
+
     for (int i = 0; i < player_count; i++) {
         if (active_players[i]) {
             printf("Player %d wins the tournament!\n", i + 1);
             break;
         }
     }
-    
+
     free(active_players);
     return 0;
 }
