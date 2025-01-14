@@ -26,10 +26,12 @@ Clients can now take user input to send moves to the other client.
 Clients also display the move, now need to add game logic and index checking
 Also need to add exit code for winner
 
-### 2024-01-11 - Game logic and sending wins to server
+### 2024-01-13 - Game logic and sending wins to server
 Clients know if they've won, and will send that message to the server
 When the server gets this message, it prints which player wins and attempts to match them up for the next round.
 
+### 2024-01-14 - Bounds checking for game and telling client if they won or lost
+Clients know if they win or lose or draw, now they can exit or rematch according to that.
 
 ## Benjamin Goihman
 

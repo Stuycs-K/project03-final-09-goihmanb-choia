@@ -2,7 +2,7 @@
 #include "game.h"
 #include "base_client.h"
 
-void game_loop(int to_server, int from_server, pid_t my_pid) {
+int game_loop(int to_server, int from_server, pid_t my_pid) {
   int board[3][3];
   for(int i = 0; i < 3; i++) {
     for(int j = 0; j < 3; j++) {
@@ -22,6 +22,14 @@ void game_loop(int to_server, int from_server, pid_t my_pid) {
   while(1) {
     if(read(from_server, &move, GS) < 0) {
       printf("%s\n", strerror(errno));
+    }
+    if(move.won == MOVE_WIN) {
+      printf("I lost, exiting\n");
+      return MOVE_LOSE;
+    }
+    if(move.won == MOVE_TIE) {
+      printf("Tie, rematching\n");
+      return MOVE_TIE;
     }
     board[move.row][move.col] = opp_character;
     // printf("Received move from client, %d %d\n", move.row, move.col);
@@ -73,12 +81,23 @@ void write_to_server(struct game_move move, int (*board)[3], int to_server, int 
   char rowbuff [10];
   char colbuff [10];
   char *endptr;
-  printf("Enter the row, from 1 to 3: \n");
-  fgets(rowbuff, sizeof(rowbuff), stdin);
-  printf("Enter the column, from 1 to 3: \n");
-  fgets(colbuff, sizeof(colbuff), stdin);
-  int r = strtol(rowbuff, &endptr, 10);
-  int c = strtol(colbuff, &endptr, 10);
+  while(1) {
+    printf("Enter the row, from 1 to 3: \n");
+    fgets(rowbuff, sizeof(rowbuff), stdin);
+    printf("Enter the column, from 1 to 3: \n");
+    fgets(colbuff, sizeof(colbuff), stdin);
+    int r = strtol(rowbuff, &endptr, 10);
+    int c = strtol(colbuff, &endptr, 10);
+    if(r < 1 || r > 3 || c < 1 || c > 3) {
+      printf("Invalid index\n");
+      continue;
+    }
+    if(board[r-1][c-1] != 0) {
+      printf("Space is occupied\n");
+      continue;
+    }
+    break;
+  }
   move.row = r - 1;
   move.col = c - 1;
   board[r - 1][c - 1] = my_character;
@@ -106,8 +125,6 @@ int main() {
 
 //Return 1 if plyr won, 0 if continue playing, -2 if tied. To be called after plyr made thier move
 int checkforcond(int plyr, int board[3][3], int row, int col){
-  // int row = move.row;
-  // int col = move.col;
   int vert_check = 1;
   int horizontal_check = 1;
   for(int c = 0; c < 3; c++) {
@@ -135,7 +152,7 @@ int checkforcond(int plyr, int board[3][3], int row, int col){
   }
   if(isdraw) return MOVE_TIE;
 
-  return MOVE_LOSE;
+  return MOVE_REGULAR;
 }
 
 

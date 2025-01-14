@@ -21,19 +21,14 @@ int play_game(int frm1, int frm2, int to1, int to2, int who){
     game_move_array[0].msg_type = O;
     game_move_array[1].ismove = OPPONENT_TURN;
     game_move_array[1].msg_type = X;
-    printf("Wrote to %d\n",to1);
     write(to1, &game_move_array[0],GS);
-    printf("Wrote to %d\n",to1);
     write(to2, &game_move_array[1],GS);
     struct game_move curr_move;
 
-
     while(1) {
       read(frm1, &curr_move, GS);
-      printf("Server %d got move %d %d \n", who, curr_move.row, curr_move.col);
       if (curr_move.won == MOVE_WIN) {
         printf("Player %d wins!\n", who);
-        write(to1, &curr_move, GS);
         write(to2, &curr_move, GS);
         return 0;
       }
