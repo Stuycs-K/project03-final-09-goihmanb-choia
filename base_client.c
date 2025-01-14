@@ -34,12 +34,8 @@ int game_loop(int to_server, int from_server, pid_t my_pid) {
       return MOVE_TIE;
     }
     board[move.row][move.col] = opp_character;
-    // printf("Received move from client, %d %d\n", move.row, move.col);
     format_brd(board, display);
     write_to_server(move, board, to_server, my_character);
-    // move.won = checkforcond(my_character, board, move);
-    // if(move.won == MOVE_WIN) printf("I WON\n");
-    // printf("Sending move to client, %d %d\n", move.row, move.col);
   }
 }
 
@@ -62,7 +58,7 @@ char * format_brd(int board[3][3], char ret[1000]){
         }
         if(i!=2){
             ret[index++] = '\n';
-            ret[index++]='-'; 
+            ret[index++]='-';
             ret[index++]='-';
             ret[index++]='-';
             ret[index++]='-';
@@ -115,14 +111,13 @@ int main() {
     printf("Please enter username: ");
     fgets(username,500,stdin);
     printf("From server %d\n",from_server);
-    game_loop(to_server, from_server, my_pid);
-    int board[3][3] = {
-        {1,0,1},
-        {1,0,-1},
-        {1,1,1}
-    };
-    char ret[1000];
-    printf("%s",format_brd(board,ret));
+    while(1) {
+      if(game_loop(to_server, from_server, my_pid) == MOVE_LOSE) {
+        close(to_server);
+        close(from_server);
+        break;
+      }
+    }
     return 0;
 }
 

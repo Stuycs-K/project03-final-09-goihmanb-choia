@@ -28,10 +28,12 @@ Also need to add exit code for winner
 
 ### 2024-01-13 - Game logic and sending wins to server
 Clients know if they've won, and will send that message to the server
-When the server gets this message, it prints which player wins and attempts to match them up for the next round.
+When the server gets this message, it prints which player wins and attempts to match them up for the next round. - 30 mins
 
 ### 2024-01-14 - Bounds checking for game and telling client if they won or lost
-Clients know if they win or lose or draw, now they can exit or rematch according to that.
+Clients know if they win or lose or draw, now they can exit or rematch according to that. -15 mins
+Game logic and trying to debug client server tournament second round seg fault - 40 mins
+
 
 ## Benjamin Goihman
 

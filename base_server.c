@@ -30,6 +30,8 @@ int play_game(int frm1, int frm2, int to1, int to2, int who){
       if (curr_move.won == MOVE_WIN) {
         printf("Player %d wins!\n", who);
         write(to2, &curr_move, GS);
+        close(to2);
+        close(frm2);
         return 0;
       }
       write(to2, &curr_move, GS);
@@ -38,7 +40,8 @@ int play_game(int frm1, int frm2, int to1, int to2, int who){
         if (curr_move.won == MOVE_WIN) {
             printf("Player %d wins!\n", who);
             write(to1, &curr_move, GS);
-            write(to2, &curr_move, GS);
+            close(to1);
+            close(frm2);
             return 1;
         }
       write(to1, &curr_move, GS);
@@ -116,6 +119,7 @@ int main() {
         }
 
         round++;
+        printf("Players remaining %d\n", players_remaining);
     }
 
     for (int i = 0; i < player_count; i++) {
