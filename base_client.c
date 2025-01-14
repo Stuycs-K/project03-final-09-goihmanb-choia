@@ -2,6 +2,8 @@
 #include "game.h"
 #include "base_client.h"
 
+char username[500];
+
 int game_loop(int to_server, int from_server, pid_t my_pid) {
   int board[3][3];
   for(int i = 0; i < 3; i++) {
@@ -60,9 +62,7 @@ char * format_brd(int board[3][3], char ret[1000]){
         }
         if(i!=2){
             ret[index++] = '\n';
-            ret[index++]='-';
-            ret[index++]='-';
-            ret[index++]='-';
+            ret[index++]='-'; 
             ret[index++]='-';
             ret[index++]='-';
             ret[index++]='-';
@@ -103,7 +103,7 @@ void write_to_server(struct game_move move, int (*board)[3], int to_server, int 
   move.col = c - 1;
   board[r - 1][c - 1] = my_character;
   move.won = checkforcond(my_character, board, move.row, move.col);
-  if(move.won == MOVE_WIN) printf("I WON\n");
+  if(move.won == MOVE_WIN) printf("I %s WON\n",username);
   write(to_server, &move, GS);
 }
 
@@ -112,6 +112,8 @@ int main() {
     int from_server;
     pid_t my_pid = getpid();
     from_server = client_handshake(&to_server);
+    printf("Please enter username: ");
+    fgets(username,500,stdin);
     printf("From server %d\n",from_server);
     game_loop(to_server, from_server, my_pid);
     int board[3][3] = {
