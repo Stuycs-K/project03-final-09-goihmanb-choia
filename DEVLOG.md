@@ -36,6 +36,7 @@ Game logic and trying to debug client server tournament second round seg fault -
 
 ### 2024-01-15 - Tournament exiting
 Clients now have a tournament_win variable, so they know if they win the tournament or just game - 30 mins
+Fixed the tournament style, now need to fix if not 8 players and have users enter their name - 20 mins
 
 ## Benjamin Goihman
 

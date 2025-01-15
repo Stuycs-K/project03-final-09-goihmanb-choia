@@ -4,50 +4,46 @@
 
 char username[500];
 
+int status_check(int status) {
+  if(status == MOVE_LOSE) {
+    printf("I lost, exiting\n");
+    return MOVE_LOSE;
+  }
+  if(status == MOVE_TIE) {
+    printf("Tie, rematching\n");
+    return MOVE_TIE;
+  }
+  if(status == TOURNAMENT_WIN) {
+    printf("I win everything!!\n");
+    return TOURNAMENT_WIN;
+  }
+  if(status == MOVE_WIN) {
+    printf("I win\n");
+    return MOVE_WIN;
+  }
+  return MOVE_REGULAR;
+}
+
 int game_loop(int to_server, int from_server, pid_t my_pid) {
   int board[3][3];
   for(int i = 0; i < 3; i++) {
-    for(int j = 0; j < 3; j++) {
-        board[i][j] = 0;
-    }
+    for(int j = 0; j < 3; j++) board[i][j] = 0;
   }
   char display [1000];
   struct game_move move;
-  if(read(from_server,&move,GS)<0){
-          printf("%s",strerror(errno));
-  }
+  if(read(from_server,&move,GS)<0) printf("%s",strerror(errno));
+
   int my_character = move.msg_type;
   int opp_character = (my_character == O) ? X : O;
-  if (move.ismove == YOUR_TURN) {
-    write_to_server(move, board, to_server, my_character);
-  }
+  if (move.ismove == YOUR_TURN) write_to_server(move, board, to_server, my_character);
+
   while(1) {
-    if(read(from_server, &move, GS) < 0) {
-      printf("%s\n", strerror(errno));
-    }
-    if(move.won == MOVE_LOSE) {
-      printf("I lost, exiting\n");
-      return MOVE_LOSE;
-    }
-    if(move.won == MOVE_TIE) {
-      printf("Tie, rematching\n");
-      return MOVE_TIE;
-    }
-    if(move.won == TOURNAMENT_WIN) {
-      printf("I win everything!!\n");
-      return TOURNAMENT_WIN;
-    }
-    if(move.won == MOVE_WIN) {
-      printf("I win\n");
-      return MOVE_WIN;
-    }
+    if(read(from_server, &move, GS) < 0) printf("%s\n", strerror(errno));
+    int status = status_check(move.won);
+    if(status != MOVE_REGULAR) return status;
     board[move.row][move.col] = opp_character;
     format_brd(board, display);
-    int game_status = write_to_server(move, board, to_server, my_character);
-    // if(game_status == MOVE_TIE) {
-    //   printf("Tie\n");
-    //   return MOVE_TIE;
-    // }
+    write_to_server(move, board, to_server, my_character);
   }
 }
 
@@ -95,8 +91,6 @@ int write_to_server(struct game_move move, int (*board)[3], int to_server, int m
     scanf("%d", &r);
     printf("Enter the column, from 1 to 3: \n");
     scanf("%d", &c);
-    // printf("I got column");
-    // printf("I got here\n");
     if(r < 1 || r > 3 || c < 1 || c > 3) {
       printf("Invalid index\n");
       continue;
@@ -111,7 +105,6 @@ int write_to_server(struct game_move move, int (*board)[3], int to_server, int m
   move.col = c - 1;
   board[r - 1][c - 1] = my_character;
   move.won = checkforcond(my_character, board, move.row, move.col);
-  if(move.won == MOVE_WIN) printf("I WON\n");
   if(write(to_server, &move, GS) < 0) printf("err writing to serv %s\n", strerror(errno));
   return move.won;
 }
@@ -121,8 +114,6 @@ int main() {
     int from_server;
     pid_t my_pid = getpid();
     from_server = client_handshake(&to_server);
-    // printf("Please enter username: ");
-    // fgets(username,500,stdin);
     printf("From server %d\n",from_server);
     while(1) {
       int status = game_loop(to_server, from_server, my_pid);
@@ -131,6 +122,7 @@ int main() {
         close(from_server);
         break;
       }
+      printf("Finished a round\n");
     }
     return 0;
 }

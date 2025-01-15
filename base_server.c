@@ -31,14 +31,14 @@ int play_game(int frm1, int frm2, int to1, int to2, int who, int matches){
 
     while(1) {
       if(read(frm1, &curr_move, GS) < 0) err();
-      if (curr_move.won == MOVE_WIN) {
+      if(curr_move.won == MOVE_WIN) {
         printf("Player %d wins!\n", who);
-        curr_move.won = MOVE_LOSE;
-        if(write(to2, &curr_move, GS) < 0) err();
         if(matches == 1) {
           curr_move.won = TOURNAMENT_WIN;
-          write(to1, &curr_move, GS);
         }
+        write(to1, &curr_move, GS);
+        curr_move.won = MOVE_LOSE;
+        if(write(to2, &curr_move, GS) < 0) err();
         close(to2);
         close(frm2);
         return 0;
@@ -48,18 +48,17 @@ int play_game(int frm1, int frm2, int to1, int to2, int who, int matches){
       printf("Server %d got move %d %d \n", who, curr_move.row, curr_move.col);
         if (curr_move.won == MOVE_WIN) {
             printf("Player %d wins!\n", who + 1);
-            curr_move.won = MOVE_LOSE;
-            if(write(to1, &curr_move, GS) < 0) err();
             if(matches == 1) {
               curr_move.won = TOURNAMENT_WIN;
-              write(to2, &curr_move, GS);
             }
+            write(to2, &curr_move, GS);
+            curr_move.won = MOVE_LOSE;
+            if(write(to1, &curr_move, GS) < 0) err();
             close(to1);
-            close(frm2);
+            close(frm1);
             return 1;
         }
       if(write(to1, &curr_move, GS) < 0) err();
-      sleep(1);
     }
     close(frm1);
     close(frm2);
@@ -79,7 +78,7 @@ int main() {
     int alive_state = 0;
 
     printf("Waiting for players to connect...\n");
-    while (player_count < 2) {
+    while (player_count < 4) {
         printf("\n[server] waiting for client connection %d/4\n", player_count + 1);
         int from_client, to_client;
         from_client = server_handshake(&to_client);
