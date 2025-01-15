@@ -34,6 +34,8 @@ When the server gets this message, it prints which player wins and attempts to m
 Clients know if they win or lose or draw, now they can exit or rematch according to that. -15 mins
 Game logic and trying to debug client server tournament second round seg fault - 40 mins
 
+### 2024-01-15 - Tournament exiting
+Clients now have a tournament_win variable, so they know if they win the tournament or just game - 30 mins
 
 ## Benjamin Goihman
 

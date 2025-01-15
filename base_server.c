@@ -13,40 +13,53 @@ void sighandler(int signo) {
     }
 }
 
+void err() {
+  printf("%s\n", strerror(errno));
+  exit(1);
+}
 void write_stats(int wol,char user[500]){} //for win or lose
 
-int play_game(int frm1, int frm2, int to1, int to2, int who){
+int play_game(int frm1, int frm2, int to1, int to2, int who, int matches){
     struct game_move game_move_array[2];
     game_move_array[0].ismove = YOUR_TURN;
     game_move_array[0].msg_type = O;
     game_move_array[1].ismove = OPPONENT_TURN;
     game_move_array[1].msg_type = X;
-    write(to1, &game_move_array[0],GS);
-    write(to2, &game_move_array[1],GS);
+    if(write(to1, &game_move_array[0],GS) < 0) err();
+    if(write(to2, &game_move_array[1],GS) < 0) err();
     struct game_move curr_move;
 
     while(1) {
-      read(frm1, &curr_move, GS);
+      if(read(frm1, &curr_move, GS) < 0) err();
       if (curr_move.won == MOVE_WIN) {
         printf("Player %d wins!\n", who);
-        write(to2, &curr_move, GS);
+        curr_move.won = MOVE_LOSE;
+        if(write(to2, &curr_move, GS) < 0) err();
+        if(matches == 1) {
+          curr_move.won = TOURNAMENT_WIN;
+          write(to1, &curr_move, GS);
+        }
         close(to2);
         close(frm2);
         return 0;
       }
-      write(to2, &curr_move, GS);
-      read(frm2, &curr_move, GS);
+      if(write(to2, &curr_move, GS) < 0) err();
+      if(read(frm2, &curr_move, GS) < 0) err();
       printf("Server %d got move %d %d \n", who, curr_move.row, curr_move.col);
         if (curr_move.won == MOVE_WIN) {
-            printf("Player %d wins!\n", who);
-            write(to1, &curr_move, GS);
+            printf("Player %d wins!\n", who + 1);
+            curr_move.won = MOVE_LOSE;
+            if(write(to1, &curr_move, GS) < 0) err();
+            if(matches == 1) {
+              curr_move.won = TOURNAMENT_WIN;
+              write(to2, &curr_move, GS);
+            }
             close(to1);
             close(frm2);
             return 1;
         }
-      write(to1, &curr_move, GS);
+      if(write(to1, &curr_move, GS) < 0) err();
       sleep(1);
-    //   break;
     }
     close(frm1);
     close(frm2);
@@ -81,6 +94,8 @@ int main() {
 
     while (players_remaining > 1) {
         printf("\n=== Round %d ===\n", round);
+        int matches = players_remaining / 2;
+
 
         for (int i = 0; i < player_count; i++) {
             if (active_players[i] != alive_state) continue;
@@ -95,8 +110,9 @@ int main() {
 
             if (opponent != -1) {
                 int pid = fork();
+                if (pid < 0) err();
                 if (pid == 0) {
-                    int result = play_game(frm[i], frm[opponent], to[i], to[opponent], i);
+                    int result = play_game(frm[i], frm[opponent], to[i], to[opponent], i + 1, matches);
                     int win_idx = result == 0 ? i : opponent;
                     exit(win_idx);
                 }
@@ -104,8 +120,6 @@ int main() {
                 active_players[opponent] = -1;
             }
         }
-
-        int matches = players_remaining / 2;
         alive_state++;
 
         for (int i = 0; i < matches; i++) {

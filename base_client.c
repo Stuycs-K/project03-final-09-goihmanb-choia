@@ -13,7 +13,7 @@ int game_loop(int to_server, int from_server, pid_t my_pid) {
   }
   char display [1000];
   struct game_move move;
-  if(read(from_server,&move,GS)<=0){
+  if(read(from_server,&move,GS)<0){
           printf("%s",strerror(errno));
   }
   int my_character = move.msg_type;
@@ -25,7 +25,7 @@ int game_loop(int to_server, int from_server, pid_t my_pid) {
     if(read(from_server, &move, GS) < 0) {
       printf("%s\n", strerror(errno));
     }
-    if(move.won == MOVE_WIN) {
+    if(move.won == MOVE_LOSE) {
       printf("I lost, exiting\n");
       return MOVE_LOSE;
     }
@@ -33,9 +33,21 @@ int game_loop(int to_server, int from_server, pid_t my_pid) {
       printf("Tie, rematching\n");
       return MOVE_TIE;
     }
+    if(move.won == TOURNAMENT_WIN) {
+      printf("I win everything!!\n");
+      return TOURNAMENT_WIN;
+    }
+    if(move.won == MOVE_WIN) {
+      printf("I win\n");
+      return MOVE_WIN;
+    }
     board[move.row][move.col] = opp_character;
     format_brd(board, display);
-    write_to_server(move, board, to_server, my_character);
+    int game_status = write_to_server(move, board, to_server, my_character);
+    // if(game_status == MOVE_TIE) {
+    //   printf("Tie\n");
+    //   return MOVE_TIE;
+    // }
   }
 }
 
@@ -73,22 +85,18 @@ char * format_brd(int board[3][3], char ret[1000]){
     return ret;
 }
 
-void write_to_server(struct game_move move, int (*board)[3], int to_server, int my_character) {
+int write_to_server(struct game_move move, int (*board)[3], int to_server, int my_character) {
   char rowbuff [10];
   char colbuff [10];
   char *endptr;
   int r, c;
   while(1) {
     printf("Enter the row, from 1 to 3: \n");
-    // fgets(rowbuff, sizeof(rowbuff), stdin);
     scanf("%d", &r);
     printf("Enter the column, from 1 to 3: \n");
-    // fgets(colbuff, sizeof(colbuff), stdin);
     scanf("%d", &c);
-    printf("I got column");
-    // r = strtol(rowbuff, &endptr, 10);
-    // c = strtol(colbuff, &endptr, 10);
-    printf("I got here\n");
+    // printf("I got column");
+    // printf("I got here\n");
     if(r < 1 || r > 3 || c < 1 || c > 3) {
       printf("Invalid index\n");
       continue;
@@ -103,8 +111,9 @@ void write_to_server(struct game_move move, int (*board)[3], int to_server, int 
   move.col = c - 1;
   board[r - 1][c - 1] = my_character;
   move.won = checkforcond(my_character, board, move.row, move.col);
-  if(move.won == MOVE_WIN) printf("I %s WON\n",username);
-  write(to_server, &move, GS);
+  if(move.won == MOVE_WIN) printf("I WON\n");
+  if(write(to_server, &move, GS) < 0) printf("err writing to serv %s\n", strerror(errno));
+  return move.won;
 }
 
 int main() {
@@ -112,11 +121,12 @@ int main() {
     int from_server;
     pid_t my_pid = getpid();
     from_server = client_handshake(&to_server);
-    printf("Please enter username: ");
-    fgets(username,500,stdin);
+    // printf("Please enter username: ");
+    // fgets(username,500,stdin);
     printf("From server %d\n",from_server);
     while(1) {
-      if(game_loop(to_server, from_server, my_pid) == MOVE_LOSE) {
+      int status = game_loop(to_server, from_server, my_pid);
+      if(status == MOVE_LOSE || status == TOURNAMENT_WIN) {
         close(to_server);
         close(from_server);
         break;
