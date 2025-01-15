@@ -116,8 +116,8 @@ int main() {
     from_server = client_handshake(&to_server);
     printf("Enter username: ");
     fgets(username,500,stdin);
-    write(to_server,username,500);
-    printf("From server %d\n",from_server);
+    username[strlen(username) - 1] = '\0';
+    write(to_server,username, 500);
     while(1) {
       int status = game_loop(to_server, from_server, my_pid);
       if(status == MOVE_LOSE || status == TOURNAMENT_WIN) {

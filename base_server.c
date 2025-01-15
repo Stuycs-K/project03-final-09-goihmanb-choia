@@ -76,7 +76,7 @@ int main() {
     int round = 1;
     int *active_players = calloc(100, sizeof(int));
     int alive_state = 0;
-    int max_players = 4;
+    int max_players = 2;
     char usernames[100][500];
     printf("Waiting for players to connect...\n");
     while (player_count < max_players) {
@@ -94,7 +94,7 @@ int main() {
     }
     printf("The names are\n");
     for (int i = 0; i < max_players; i++){
-        printf("User %d name is %s", i,usernames[i]);
+        printf("User %d name is %s\n", i,usernames[i]);
     }
 
     int players_remaining = player_count;
@@ -120,7 +120,7 @@ int main() {
                 int pid = fork();
                 if (pid < 0) err();
                 if (pid == 0) {
-                    int result = play_game(frm[i], frm[opponent], to[i], to[opponent], i + 1, matches);
+                    int result = play_game(frm[i], frm[opponent], to[i], to[opponent], i, matches);
                     int win_idx = result == 0 ? i : opponent;
                     exit(win_idx);
                 }
@@ -146,7 +146,7 @@ int main() {
 
     for (int i = 0; i < player_count; i++) {
         if (active_players[i]) {
-            printf("Player %d wins the tournament!\n", i + 1);
+            printf("Player %s wins the tournament!\n", usernames[i]);
             break;
         }
     }
