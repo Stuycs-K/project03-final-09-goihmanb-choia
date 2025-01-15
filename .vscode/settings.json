@@ -1,7 +1,9 @@
 {
     "files.associations": {
+        "*.java": "java",
         "game.h": "c",
         "pipe_networking.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "base_client.h": "c"
     }
 }

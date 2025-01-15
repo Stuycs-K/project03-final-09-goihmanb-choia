@@ -66,7 +66,7 @@ int main() {
     int alive_state = 0;
 
     printf("Waiting for players to connect...\n");
-    while (player_count < 4) {
+    while (player_count < 2) {
         printf("\n[server] waiting for client connection %d/4\n", player_count + 1);
         int from_client, to_client;
         from_client = server_handshake(&to_client);

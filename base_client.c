@@ -80,11 +80,15 @@ void write_to_server(struct game_move move, int (*board)[3], int to_server, int 
   int r, c;
   while(1) {
     printf("Enter the row, from 1 to 3: \n");
-    fgets(rowbuff, sizeof(rowbuff), stdin);
+    // fgets(rowbuff, sizeof(rowbuff), stdin);
+    scanf("%d", &r);
     printf("Enter the column, from 1 to 3: \n");
-    fgets(colbuff, sizeof(colbuff), stdin);
-    r = strtol(rowbuff, &endptr, 10);
-    c = strtol(colbuff, &endptr, 10);
+    // fgets(colbuff, sizeof(colbuff), stdin);
+    scanf("%d", &c);
+    printf("I got column");
+    // r = strtol(rowbuff, &endptr, 10);
+    // c = strtol(colbuff, &endptr, 10);
+    printf("I got here\n");
     if(r < 1 || r > 3 || c < 1 || c > 3) {
       printf("Invalid index\n");
       continue;
