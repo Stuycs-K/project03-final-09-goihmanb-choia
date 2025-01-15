@@ -76,9 +76,10 @@ int main() {
     int round = 1;
     int *active_players = calloc(100, sizeof(int));
     int alive_state = 0;
-
+    int max_players = 4;
+    char usernames[100][500];
     printf("Waiting for players to connect...\n");
-    while (player_count < 4) {
+    while (player_count < max_players) {
         printf("\n[server] waiting for client connection %d/4\n", player_count + 1);
         int from_client, to_client;
         from_client = server_handshake(&to_client);
@@ -86,6 +87,14 @@ int main() {
         to[player_count] = to_client;
         active_players[player_count] = alive_state;
         player_count++;
+    }
+
+    for (int i = 0; i < max_players; i++){
+        read(frm[i],usernames[i],500);
+    }
+    printf("The names are\n");
+    for (int i = 0; i < max_players; i++){
+        printf("User %d name is %s", i,usernames[i]);
     }
 
     int players_remaining = player_count;

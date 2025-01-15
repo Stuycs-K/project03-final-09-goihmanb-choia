@@ -114,6 +114,9 @@ int main() {
     int from_server;
     pid_t my_pid = getpid();
     from_server = client_handshake(&to_server);
+    printf("Enter username: ");
+    fgets(username,500,stdin);
+    write(to_server,username,500);
     printf("From server %d\n",from_server);
     while(1) {
       int status = game_loop(to_server, from_server, my_pid);
