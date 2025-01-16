@@ -68,6 +68,27 @@ int play_game(int frm1, int frm2, int to1, int to2, int who, int matches){
     return 0;
 }
 
+void get_random_indexes(int *indexes, int n, int max) {
+    int count = 0;
+
+    while (count < n) {
+        int rand_index = rand() % max;
+
+        int exists = 0;
+        for (int i = 0; i < count; i++) {
+            if (indexes[i] == rand_index) {
+                exists = 1;
+                break;
+            }
+        }
+
+        if (!exists) {
+            indexes[count] = rand_index;
+            count++;
+        }
+    }
+}
+
 int main() {
     signal(SIGINT, sighandler);
     srand(time(NULL));
@@ -77,7 +98,7 @@ int main() {
     int round = 1;
     int *active_players = calloc(100, sizeof(int));
     int alive_state = 0;
-    int max_players = 2;
+    int max_players = 3;
     char usernames[100][500];
     int byes[9] = {
       -1, -1, 0, 1, 0, 3, 2, 1, 0
@@ -107,8 +128,13 @@ int main() {
     while (players_remaining > 1) {
         printf("\n=== Round %d ===\n", round);
         int matches = players_remaining / 2;
-
-
+        int skips[byes[players_remaining]];
+        if (round == 1){
+        get_random_indexes(skips,byes[players_remaining],players_remaining);
+        for (int i = 0; i < players_remaining; i++){
+            active_players[i] = -11;
+        }
+        }
         for (int i = 0; i < player_count; i++) {
             if (active_players[i] != alive_state) continue;
 
@@ -141,6 +167,11 @@ int main() {
                 int winner_idx = WEXITSTATUS(status);
                 active_players[winner_idx] = alive_state;
                 players_remaining--;
+            }
+        }
+        if (round==1){
+            for (int i = 0; i < byes[players_remaining]; i++){
+                active_players[skips[i]] = alive_state;
             }
         }
 
