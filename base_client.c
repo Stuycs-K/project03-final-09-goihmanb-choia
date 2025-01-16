@@ -25,11 +25,15 @@ int status_check(int status) {
   return MOVE_REGULAR;
 }
 
-int game_loop(int to_server, int from_server, pid_t my_pid) {
-  int board[3][3];
+void init_board(int (*board)[3]) {
   for(int i = 0; i < 3; i++) {
     for(int j = 0; j < 3; j++) board[i][j] = 0;
   }
+}
+
+int game_loop(int to_server, int from_server, pid_t my_pid) {
+  int board[3][3];
+  init_board(board);
   char display [1000];
   struct game_move move;
   if(read(from_server,&move,GS)<0) printf("%s",strerror(errno));
@@ -41,9 +45,9 @@ int game_loop(int to_server, int from_server, pid_t my_pid) {
   while(1) {
     if(read(from_server, &move, GS) < 0) printf("%s\n", strerror(errno));
     int status = status_check(move.won);
-    if(status != MOVE_REGULAR) return status;
-    if(status == MOVE_TIE)
+    if(status != MOVE_REGULAR && status != MOVE_TIE) return status;
     board[move.row][move.col] = opp_character;
+    if(status == MOVE_TIE) init_board(board);
     format_brd(board, display);
     write_to_server(move, board, to_server, my_character);
   }
