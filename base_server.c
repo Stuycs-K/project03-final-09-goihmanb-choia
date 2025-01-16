@@ -127,12 +127,12 @@ int main() {
 
     while (players_remaining > 1) {
         printf("\n=== Round %d ===\n", round);
-        int matches = players_remaining / 2;
+        int matches = (players_remaining+1) / 2;
         int skips[byes[players_remaining]];
         if (round == 1){
         get_random_indexes(skips,byes[players_remaining],players_remaining);
-        for (int i = 0; i < players_remaining; i++){
-            active_players[i] = -11;
+        for (int i = 0; i < byes[players_remaining]; i++){
+            active_players[skips[i]] = -11;
         }
         }
         for (int i = 0; i < player_count; i++) {
