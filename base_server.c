@@ -18,9 +18,9 @@ void err() {
   exit(1);
 }
 
-void write_stats(int wol,char user[500]){} //for win or lose
+void write_stats(int wol, char user[500]){} //for win or lose
 
-int play_game(int frm1, int frm2, int to1, int to2, int who, int matches){
+int play_game(int frm1, int frm2, int to1, int to2, int who, int matches, char usernames[100][500]){
     struct game_move game_move_array[2];
     game_move_array[0].ismove = YOUR_TURN;
     game_move_array[0].msg_type = O;
@@ -33,9 +33,9 @@ int play_game(int frm1, int frm2, int to1, int to2, int who, int matches){
     while(1) {
       if(read(frm1, &curr_move, GS) < 0) err();
       if(curr_move.won == MOVE_WIN) {
-        printf("Player %d wins!\n", who);
         if(matches == 1) {
           curr_move.won = TOURNAMENT_WIN;
+          write_stats(TOURNAMENT_WIN, usernames[who]);
         }
         write(to1, &curr_move, GS);
         curr_move.won = MOVE_LOSE;
@@ -46,9 +46,7 @@ int play_game(int frm1, int frm2, int to1, int to2, int who, int matches){
       }
       if(write(to2, &curr_move, GS) < 0) err();
       if(read(frm2, &curr_move, GS) < 0) err();
-      printf("Server %d got move %d %d \n", who, curr_move.row, curr_move.col);
         if (curr_move.won == MOVE_WIN) {
-            printf("Player %d wins!\n", who + 1);
             if(matches == 1) {
               curr_move.won = TOURNAMENT_WIN;
             }
@@ -124,7 +122,7 @@ int main() {
                 int pid = fork();
                 if (pid < 0) err();
                 if (pid == 0) {
-                    int result = play_game(frm[i], frm[opponent], to[i], to[opponent], i, matches);
+                    int result = play_game(frm[i], frm[opponent], to[i], to[opponent], i, matches, usernames);
                     int win_idx = result == 0 ? i : opponent;
                     exit(win_idx);
                 }

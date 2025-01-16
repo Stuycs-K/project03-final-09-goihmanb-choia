@@ -41,8 +41,9 @@ WORK ON:
 Work with a non-power of 2 players
 Ties
 
-### 2024-01-16 - Cleaning up
-Fixed all the .h headers, cleaned up some code - remove some print statements, add some comments.
+### 2024-01-16 - Cleaning up and fixing draws
+Fixed all the .h headers, cleaned up some code - remove some print statements, add some comments. - 15 mins
+Draws now rematch - 15 mins
 
 ## Benjamin Goihman
 

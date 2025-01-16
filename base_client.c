@@ -114,6 +114,7 @@ int write_to_server(struct game_move move, int (*board)[3], int to_server, int m
   move.col = c - 1;
   board[r - 1][c - 1] = my_character;
   move.won = checkforcond(my_character, board, move.row, move.col);
+  if(move.won == MOVE_TIE) init_board(board);
   if(write(to_server, &move, GS) < 0) printf("err writing to serv %s\n", strerror(errno));
   return move.won;
 }

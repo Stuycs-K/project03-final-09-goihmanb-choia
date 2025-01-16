@@ -6,6 +6,7 @@
 #define MOVE_LOSE -1
 #define MOVE_TIE 2
 #define TOURNAMENT_WIN 3
+#define TOURNAMENT_LOSE 4
 #define O 4
 #define X 5
 
