@@ -41,6 +41,9 @@ WORK ON:
 Work with a non-power of 2 players
 Ties
 
+### 2024-01-16 - Cleaning up
+Fixed all the .h headers, cleaned up some code - remove some print statements, add some comments.
+
 ## Benjamin Goihman
 
 ### 2025-01-06 - Work on PROPOSAL.md

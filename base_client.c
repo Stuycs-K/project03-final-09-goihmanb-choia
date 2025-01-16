@@ -4,6 +4,7 @@
 
 char username[500];
 
+// return the status for the game to be used in game_loop after reading from server
 int status_check(int status) {
   if(status == MOVE_LOSE) {
     printf("I lost, exiting\n");
@@ -47,6 +48,7 @@ int game_loop(int to_server, int from_server, pid_t my_pid) {
   }
 }
 
+// formats the board, prints and returns the string
 char * format_brd(int board[3][3], char ret[1000]){
     int index = 0;
     for(int i = 0; i<3;i++){
@@ -81,6 +83,8 @@ char * format_brd(int board[3][3], char ret[1000]){
     return ret;
 }
 
+// takes user input and writes the move to the server. Also sets win status appropriately.
+// returns the move.won status
 int write_to_server(struct game_move move, int (*board)[3], int to_server, int my_character) {
   char rowbuff [10];
   char colbuff [10];
@@ -121,12 +125,12 @@ int main() {
     while(1) {
       int status = game_loop(to_server, from_server, my_pid);
       if(status == MOVE_LOSE || status == TOURNAMENT_WIN) {
-        close(to_server);
-        close(from_server);
         break;
       }
       printf("Finished a round\n");
     }
+    close(to_server);
+    close(from_server);
     return 0;
 }
 
@@ -162,5 +166,7 @@ int checkforcond(int plyr, int board[3][3], int row, int col){
   return MOVE_REGULAR;
 }
 
-
-char * display_leaderboard (FILE * f) {} // Return the string for the leaderboard.
+// Return the string for the leaderboard.
+char * display_leaderboard (FILE * f) {
+  return "";
+}

@@ -17,6 +17,7 @@ void err() {
   printf("%s\n", strerror(errno));
   exit(1);
 }
+
 void write_stats(int wol,char user[500]){} //for win or lose
 
 int play_game(int frm1, int frm2, int to1, int to2, int who, int matches){
