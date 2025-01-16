@@ -42,6 +42,7 @@ int game_loop(int to_server, int from_server, pid_t my_pid) {
     if(read(from_server, &move, GS) < 0) printf("%s\n", strerror(errno));
     int status = status_check(move.won);
     if(status != MOVE_REGULAR) return status;
+    if(status == MOVE_TIE)
     board[move.row][move.col] = opp_character;
     format_brd(board, display);
     write_to_server(move, board, to_server, my_character);

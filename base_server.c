@@ -79,6 +79,9 @@ int main() {
     int alive_state = 0;
     int max_players = 2;
     char usernames[100][500];
+    int byes[9] = {
+      -1, -1, 0, 1, 0, 3, 2, 1, 0
+    };
     printf("Waiting for players to connect...\n");
     while (player_count < max_players) {
         printf("\n[server] waiting for client connection %d/4\n", player_count + 1);
