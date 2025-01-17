@@ -122,6 +122,3 @@ int server_handshake_half(int *to_client, int from_client) {
 }
 
 
-int subserver(int p1,int p2){
-  
-}
