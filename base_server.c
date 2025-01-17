@@ -19,8 +19,28 @@ void err() {
 }
 
 //for win or lose
-void write_stats(int wol, char user[500]){
-
+void write_stats(int wol, char username[500]){
+  FILE * fp = fopen(LEADERBOARD_FILE, "r+b");
+  if(fp == NULL) fp = fopen(LEADERBOARD_FILE, "w+b");
+  struct leaderboard_stats curr_player;
+  int found = 0;
+  while(fread(&curr_player, sizeof(struct leaderboard_stats), 1, fp) == 1) {
+    if(strcmp(username, curr_player.username) == 0) {
+      if(wol == TOURNAMENT_WIN) curr_player.wins++;
+      else curr_player.losses++;
+      fseek(fp, -sizeof(struct leaderboard_stats), SEEK_CUR);
+      fwrite(&curr_player, sizeof(struct leaderboard_stats), 1, fp);
+      found = 1;
+    }
+  }
+  if(found == 0) {
+    strncpy(curr_player.username, username, 499);
+    curr_player.username[499] = '\0';
+    if(wol == TOURNAMENT_WIN) curr_player.wins++;
+    else curr_player.losses++;
+    fwrite(&curr_player, sizeof(struct leaderboard_stats), 1, fp);
+  }
+  fclose(fp);
 }
 
 int play_game(int frm1, int frm2, int to1, int to2, int who, int matches, char usernames[100][500]){

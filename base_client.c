@@ -135,13 +135,14 @@ int main() {
         read(from_server,&bye,sizeof(int));
       }
       if (bye!=BYE){
-      int status = game_loop(to_server, from_server, my_pid);
-      if(status == MOVE_LOSE || status == TOURNAMENT_WIN) {
-        break;
-      }}
-      printf("Finished a round\n");
+        int status = game_loop(to_server, from_server, my_pid);
+        if(status == MOVE_LOSE || status == TOURNAMENT_WIN) {
+          break;
+        }
+      }
       rd++;
     }
+    display_leaderboard();
     close(to_server);
     close(from_server);
     return 0;
@@ -180,6 +181,18 @@ int checkforcond(int plyr, int board[3][3], int row, int col){
 }
 
 // Return the string for the leaderboard.
-char * display_leaderboard (FILE * f) {
-  return "";
+void display_leaderboard () {
+  FILE * fp = fopen(LEADERBOARD_FILE, "r+b");
+  if(fp == NULL) {
+    printf("No leaderboard to display yet\n");
+    exit(1);
+  }
+  struct leaderboard_stats player;
+  printf("\nLEADERBOARD\n");
+  printf("Username    Wins    Losses\n");
+  printf("================================================\n");
+  while(fread(&player, sizeof(struct leaderboard_stats), 1, fp) == 1) {
+    printf("%-20s%-8d%d\n", player.username, player.wins, player.losses);
+  }
+  fclose(fp);
 }

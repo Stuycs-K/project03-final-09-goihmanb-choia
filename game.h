@@ -13,6 +13,7 @@
 #define YOUR_TURN 3
 #define OPPONENT_TURN 4
 
+#define LEADERBOARD_FILE "leaderboard.dat"
 #define GS sizeof(struct game_move)
 
 
@@ -26,7 +27,9 @@ struct game_move {
 };
 
 struct leaderboard_stats {
-	char user[500];
+	char username[500];
+	int wins;
+	int losses;
 };
 
 struct game_pipes {
