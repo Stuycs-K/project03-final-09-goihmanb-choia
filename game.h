@@ -8,7 +8,7 @@
 #define TOURNAMENT_WIN 3
 #define O 4
 #define X 5
-
+#define BYE 6
 #define YOUR_TURN 3
 #define OPPONENT_TURN 4
 

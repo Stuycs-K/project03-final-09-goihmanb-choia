@@ -132,7 +132,17 @@ int main() {
             for (int i = 0; i < byes[player_count]; i++){
                 active_players[skips[i]] = -11;
             }
-        }
+
+            int bye = BYE;
+            int norm = 111;
+            for (int j = 0; j < player_count; j++) {
+                 if (active_players[j] == -11) {
+                    write(to[j], &bye, sizeof(int));
+                }
+                else{
+                    write(to[j], &norm, sizeof(int));
+                }
+        }}
         for (int i = 0; i < player_count; i++) {
             if (active_players[i] != alive_state) continue;
 

@@ -127,11 +127,17 @@ int main() {
     fgets(username,500,stdin);
     username[strlen(username) - 1] = '\0';
     write(to_server,username, 500);
+    int rd = 0;
     while(1) {
+      int bye = 1;
+      if (rd == 0){
+        read(from_server,&bye,sizeof(int));
+      }
+      if (bye!=BYE){
       int status = game_loop(to_server, from_server, my_pid);
       if(status == MOVE_LOSE || status == TOURNAMENT_WIN) {
         break;
-      }
+      }}
       printf("Finished a round\n");
     }
     close(to_server);
