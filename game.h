@@ -25,6 +25,10 @@ struct game_move {
 	int won;
 };
 
+struct leaderboard_stats {
+	char user[500];
+};
+
 struct game_pipes {
 	int from1, to1;
 	int from2, to2;

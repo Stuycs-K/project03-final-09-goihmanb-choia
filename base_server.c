@@ -18,7 +18,10 @@ void err() {
   exit(1);
 }
 
-void write_stats(int wol, char user[500]){} //for win or lose
+//for win or lose
+void write_stats(int wol, char user[500]){
+
+}
 
 int play_game(int frm1, int frm2, int to1, int to2, int who, int matches, char usernames[100][500]){
     struct game_move game_move_array[2];
@@ -37,6 +40,7 @@ int play_game(int frm1, int frm2, int to1, int to2, int who, int matches, char u
           curr_move.won = TOURNAMENT_WIN;
           write_stats(TOURNAMENT_WIN, usernames[who]);
         }
+        write_stats(TOURNAMENT_LOSE, usernames[who + 1]);
         write(to1, &curr_move, GS);
         curr_move.won = MOVE_LOSE;
         if(write(to2, &curr_move, GS) < 0) err();
@@ -49,7 +53,9 @@ int play_game(int frm1, int frm2, int to1, int to2, int who, int matches, char u
         if (curr_move.won == MOVE_WIN) {
             if(matches == 1) {
               curr_move.won = TOURNAMENT_WIN;
+              write_stats(TOURNAMENT_WIN, usernames[who + 1]);
             }
+            write_stats(TOURNAMENT_LOSE, usernames[who]);
             write(to2, &curr_move, GS);
             curr_move.won = MOVE_LOSE;
             if(write(to1, &curr_move, GS) < 0) err();
