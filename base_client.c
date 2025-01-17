@@ -139,6 +139,7 @@ int main() {
         break;
       }}
       printf("Finished a round\n");
+      rd++;
     }
     close(to_server);
     close(from_server);

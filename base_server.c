@@ -180,6 +180,7 @@ int main() {
         if (round==1){
             for (int i = 0; i < byes[player_count]; i++){
                 active_players[skips[i]] = alive_state;
+                players_remaining++;
             }
         }
         round++;
