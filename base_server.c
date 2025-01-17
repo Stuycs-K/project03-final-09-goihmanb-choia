@@ -31,6 +31,7 @@ void write_stats(int wol, char username[500]){
       fseek(fp, -sizeof(struct leaderboard_stats), SEEK_CUR);
       fwrite(&curr_player, sizeof(struct leaderboard_stats), 1, fp);
       found = 1;
+      break;
     }
   }
   if(found == 0) {
@@ -43,7 +44,7 @@ void write_stats(int wol, char username[500]){
   fclose(fp);
 }
 
-int play_game(int frm1, int frm2, int to1, int to2, int who, int matches, char usernames[100][500]){
+int play_game(int frm1, int frm2, int to1, int to2, int p1_ind, int p2_ind, int matches, char usernames[100][500]){
     struct game_move game_move_array[2];
     game_move_array[0].ismove = YOUR_TURN;
     game_move_array[0].msg_type = O;
@@ -58,9 +59,9 @@ int play_game(int frm1, int frm2, int to1, int to2, int who, int matches, char u
       if(curr_move.won == MOVE_WIN) {
         if(matches == 1) {
           curr_move.won = TOURNAMENT_WIN;
-          write_stats(TOURNAMENT_WIN, usernames[who]);
+          write_stats(TOURNAMENT_WIN, usernames[p1_ind]);
         }
-        write_stats(TOURNAMENT_LOSE, usernames[who + 1]);
+        write_stats(TOURNAMENT_LOSE, usernames[p2_ind]);
         write(to1, &curr_move, GS);
         curr_move.won = MOVE_LOSE;
         if(write(to2, &curr_move, GS) < 0) err();
@@ -73,9 +74,9 @@ int play_game(int frm1, int frm2, int to1, int to2, int who, int matches, char u
         if (curr_move.won == MOVE_WIN) {
             if(matches == 1) {
               curr_move.won = TOURNAMENT_WIN;
-              write_stats(TOURNAMENT_WIN, usernames[who + 1]);
+              write_stats(TOURNAMENT_WIN, usernames[p2_ind]);
             }
-            write_stats(TOURNAMENT_LOSE, usernames[who]);
+            write_stats(TOURNAMENT_LOSE, usernames[p1_ind]);
             write(to2, &curr_move, GS);
             curr_move.won = MOVE_LOSE;
             if(write(to1, &curr_move, GS) < 0) err();
@@ -182,7 +183,7 @@ int main() {
                 int pid = fork();
                 if (pid < 0) err();
                 if (pid == 0) {
-                    int result = play_game(frm[i], frm[opponent], to[i], to[opponent], i, matches, usernames);
+                    int result = play_game(frm[i], frm[opponent], to[i], to[opponent], i, opponent, matches, usernames);
                     int win_idx = result == 0 ? i : opponent;
                     exit(win_idx);
                 }
