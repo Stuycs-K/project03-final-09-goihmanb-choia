@@ -3,7 +3,8 @@
 #include "base_client.h"
 
 char username[500];
-
+int ties = 0;
+int max_ties = 3;
 // return the status for the game to be used in game_loop after reading from server
 int status_check(int status) {
   if(status == MOVE_LOSE) {
@@ -34,7 +35,6 @@ void init_board(int (*board)[3]) {
 int game_loop(int to_server, int from_server, pid_t my_pid) {
   int board[3][3];
   init_board(board);
-  int ties = 0;
   char display [1000];
   struct game_move move;
   if(read(from_server,&move,GS)<0) printf("%s",strerror(errno));
@@ -51,9 +51,8 @@ int game_loop(int to_server, int from_server, pid_t my_pid) {
     if(status == MOVE_TIE) {
       init_board(board);
       ties++;
-      if (ties>0){
-        printf("Too many ties up to luck now\n");
-          printf("Winner!\n");
+      if (ties>max_ties){
+          printf("Too many ties, you got lucky and won!\n");
           move.won = MOVE_WIN;
           write(to_server,&move,GS);
           return MOVE_WIN;
@@ -125,7 +124,16 @@ int write_to_server(struct game_move move, int (*board)[3], int to_server, int m
   move.col = c - 1;
   board[r - 1][c - 1] = my_character;
   move.won = checkforcond(my_character, board, move.row, move.col);
-  if(move.won == MOVE_TIE) init_board(board);
+  if(move.won == MOVE_TIE){
+    init_board(board);
+    ties++;
+    if (ties>max_ties){
+        printf("Too many ties, you got lucky and won!\n");
+        move.won = MOVE_WIN;
+        write(to_server,&move,GS);
+        return MOVE_WIN;
+    }
+  }
   if(write(to_server, &move, GS) < 0) printf("err writing to serv %s\n", strerror(errno));
   return move.won;
 }
@@ -156,6 +164,7 @@ int main() {
         if(status == MOVE_LOSE || status == TOURNAMENT_WIN) {
           break;
         }
+        ties = 0;
       }
       rd++;
     }
