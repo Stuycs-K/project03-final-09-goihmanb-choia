@@ -138,7 +138,13 @@ int main() {
     printf("Enter username: ");
     fgets(username,500,stdin);
     username[strlen(username) - 1] = '\0';
-    write(to_server,username, 500);
+    // write(to_server,username, 500);
+    //Do the write with error checking
+    if(write(to_server,username, 500) < 0) {
+      printf("Error writing to server: %s\n", strerror(errno));
+      exit(1);
+    }
+
     int rd = 0;
     while(1) {
       int bye = 1;
