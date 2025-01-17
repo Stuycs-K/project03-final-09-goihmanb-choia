@@ -34,6 +34,7 @@ void init_board(int (*board)[3]) {
 int game_loop(int to_server, int from_server, pid_t my_pid) {
   int board[3][3];
   init_board(board);
+  int ties = 0;
   char display [1000];
   struct game_move move;
   if(read(from_server,&move,GS)<0) printf("%s",strerror(errno));
@@ -47,7 +48,17 @@ int game_loop(int to_server, int from_server, pid_t my_pid) {
     int status = status_check(move.won);
     if(status != MOVE_REGULAR && status != MOVE_TIE) return status;
     board[move.row][move.col] = opp_character;
-    if(status == MOVE_TIE) init_board(board);
+    if(status == MOVE_TIE) {
+      init_board(board);
+      ties++;
+      if (ties>0){
+        printf("Too many ties up to luck now\n");
+          printf("Winner!\n");
+          move.won = MOVE_WIN;
+          write(to_server,&move,GS);
+          return MOVE_WIN;
+      }
+    }
     format_brd(board, display);
     write_to_server(move, board, to_server, my_character);
   }
