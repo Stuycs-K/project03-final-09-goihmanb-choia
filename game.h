@@ -13,6 +13,9 @@
 #define YOUR_TURN 3
 #define OPPONENT_TURN 4
 
+#define P1WIN 0
+#define P2WIN 1
+
 #define LEADERBOARD_FILE "leaderboard.dat"
 #define GS sizeof(struct game_move)
 

@@ -32,7 +32,7 @@ void write_stats(int wol, char username[500]){
       else curr_player.losses++;
       fseek(fp, -sizeof(struct leaderboard_stats), SEEK_CUR);
       fwrite(&curr_player, sizeof(struct leaderboard_stats), 1, fp);
-      printf("Adding to a new player in leaderboard %s wins: %d losses: %d\n", username, curr_player.wins, curr_player.losses);
+      printf("Adding to a player in leaderboard %s wins: %d losses: %d\n", username, curr_player.wins, curr_player.losses);
       found = 1;
       break;
     }
@@ -84,31 +84,41 @@ int play_game(int frm1, int frm2, int to1, int to2, int p1_ind, int p2_ind, int 
     game_move_array[0].msg_type = O;
     game_move_array[1].ismove = OPPONENT_TURN;
     game_move_array[1].msg_type = X;
-    if(write(to1, &game_move_array[0],GS) < 0) err();
-    if(write(to2, &game_move_array[1],GS) < 0) err();
+    if(write(to1, &game_move_array[0],GS) < 0) handle_disconnect(p2_ind, p1_ind, to2, to1, frm1, matches, usernames, &game_move_array[0]);
+    if(write(to2, &game_move_array[1],GS) < 0) handle_disconnect(p1_ind, p2_ind, to1, to2, frm2, matches, usernames, &game_move_array[1]);
     struct game_move curr_move;
 
     while(1) {
       // player 2 wins from player 1 disconnecting
       if(read(frm1, &curr_move, GS) <= 0) {
         handle_disconnect(p2_ind, p1_ind, to2, to1, frm1, matches, usernames, &curr_move);
+        return P2WIN;
       }
       // player 1 wins
       if(curr_move.won == MOVE_WIN) {
         handle_win(p1_ind, p2_ind, to1, to2, frm2, matches, usernames, &curr_move);
-        return 0;
+        return P1WIN;
       }
-      if(write(to2, &curr_move, GS) <= 0) err();
+      // player 1 wins from player 2 leaving
+      if(write(to2, &curr_move, GS) <= 0) {
+        handle_disconnect(p1_ind, p2_ind, to1, to2, frm2, matches, usernames, &curr_move);
+        return P1WIN;
+      }
       // player 1 wins from player 2 disconnecting
       if(read(frm2, &curr_move, GS) <= 0) {
         handle_disconnect(p1_ind, p2_ind, to1, to2, frm2, matches, usernames, &curr_move);
+        return P1WIN;
       }
       // player 2 wins
-        if (curr_move.won == MOVE_WIN) {
-            handle_win(p2_ind, p1_ind, to2, to1, frm1, matches, usernames, &curr_move);
-            return 1;
-        }
-      if(write(to1, &curr_move, GS) <= 0) err();
+      if (curr_move.won == MOVE_WIN) {
+        handle_win(p2_ind, p1_ind, to2, to1, frm1, matches, usernames, &curr_move);
+        return P2WIN;
+      }
+        // player 2 wins due to p1 disconnecting
+      if(write(to1, &curr_move, GS) <= 0) {
+        handle_disconnect(p2_ind, p1_ind, to2, to1, frm1, matches, usernames, &curr_move);
+        return P2WIN;
+      }
     }
 }
 
@@ -140,7 +150,7 @@ int main() {
     int round = 1;
     int *active_players = calloc(100, sizeof(int));
     int alive_state = 0;
-    int max_players = 2;
+    int max_players = 3;
     char usernames[100][500];
     int byes[9] = {
       0, 0, 0, 1, 0, 3, 2, 1, 0
@@ -166,7 +176,7 @@ int main() {
 
     int players_remaining = player_count;
     printf("Tournament starting with %d players!\n", player_count);
-
+    printf("Before matches, players_remaining: %d\n", players_remaining);
     while (players_remaining > 1) {
         printf("\n=== Round %d ===\n", round);
         int matches = (players_remaining+1) / 2;
@@ -176,17 +186,17 @@ int main() {
             for (int i = 0; i < byes[player_count]; i++){
                 active_players[skips[i]] = -11;
             }
-
             int bye = BYE;
             int norm = 111;
             for (int j = 0; j < player_count; j++) {
                  if (active_players[j] == -11) {
                     write(to[j], &bye, sizeof(int));
                 }
-                else{
+                else {
                     write(to[j], &norm, sizeof(int));
                 }
-        }}
+            }
+          }
         for (int i = 0; i < player_count; i++) {
             if (active_players[i] != alive_state) continue;
 
@@ -203,7 +213,7 @@ int main() {
                 if (pid < 0) err();
                 if (pid == 0) {
                     int result = play_game(frm[i], frm[opponent], to[i], to[opponent], i, opponent, matches, usernames);
-                    int win_idx = result == 0 ? i : opponent;
+                    int win_idx = result == P1WIN ? i : opponent;
                     exit(win_idx);
                 }
                 active_players[i] = -1;
@@ -221,18 +231,23 @@ int main() {
                 players_remaining--;
             }
         }
+        printf("After matches, players_remaining: %d\n", players_remaining);
         if (round==1){
             for (int i = 0; i < byes[player_count]; i++){
+              if(active_players[skips[i]] == -11) {
                 active_players[skips[i]] = alive_state;
                 players_remaining++;
+              }
             }
         }
         round++;
+        if(round == 2) break; //DEBUGprint, DELETE
+        printf("After byes, players_remaining: %d\n", players_remaining);
         printf("Players remaining %d\n", players_remaining);
-    }
+    }// while (players_remaining > 1)
 
     for (int i = 0; i < player_count; i++) {
-        if (active_players[i]) {
+        if (active_players[i] == alive_state) {
             printf("Player %s wins the tournament!\n", usernames[i]);
             break;
         }

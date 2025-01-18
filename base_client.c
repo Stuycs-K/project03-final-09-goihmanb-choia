@@ -6,13 +6,16 @@ char username[500];
 int ties = 0;
 // initialized with srand in main
 int max_ties = 0;
-// return the status for the game to be used in game_loop after reading from server
+//
+// static void sighandler(int signo) {
+//   // if (signo == SIGINT) {
+//   //   // sleep(1);
+//   //   // display_leaderboard();
+//   //   // exit(-1);
+//   // }
+// }
 
-static void sighandler(int signo) {
-  if (signo == SIGINT) {
-    exit(1);
-  }
-}
+// return the status for the game to be used in game_loop after reading from server
 int status_check(int status) {
   if(status == MOVE_LOSE) {
     printf("I lost, exiting\n");
@@ -55,16 +58,16 @@ int game_loop(int to_server, int from_server, pid_t my_pid) {
     int status = status_check(move.won);
     if(status != MOVE_REGULAR && status != MOVE_TIE) return status;
     board[move.row][move.col] = opp_character;
-    if(status == MOVE_TIE) {
-      init_board(board);
-      ties++;
-      if (ties>max_ties){
-          printf("Too many ties, you got lucky and won!\n");
-          move.won = MOVE_WIN;
-          write(to_server,&move,GS);
-          return MOVE_WIN;
-      }
-    }
+    // if(status == MOVE_TIE) {
+    //   init_board(board);
+    //   ties++;
+    //   if (ties>max_ties){
+    //       printf("Too many ties, you got lucky and won! (from gameloop)\n");
+    //       move.won = MOVE_WIN;
+    //       write(to_server,&move,GS);
+    //       return MOVE_WIN;
+    //   }
+    // }
     format_brd(board, display);
     write_to_server(move, board, to_server, my_character);
   }
@@ -139,7 +142,7 @@ int write_to_server(struct game_move move, int (*board)[3], int to_server, int m
         printf("Too many ties, you got lucky and won!\n");
         move.won = MOVE_WIN;
         write(to_server,&move,GS);
-        return MOVE_WIN;
+        return MOVE_REGULAR; // For logic - i don't want to exit, because i need to read from the server if my win advances me or if i won the whole thing.
     }
   }
   if(write(to_server, &move, GS) < 0) printf("err writing to serv %s\n", strerror(errno));
@@ -147,7 +150,7 @@ int write_to_server(struct game_move move, int (*board)[3], int to_server, int m
 }
 
 int main() {
-    signal(SIGINT, sighandler);
+    // signal(SIGINT, sighandler);
     int to_server;
     int from_server;
     pid_t my_pid = getpid();
