@@ -30,6 +30,7 @@ void write_stats(int wol, char username[500]){
       else curr_player.losses++;
       fseek(fp, -sizeof(struct leaderboard_stats), SEEK_CUR);
       fwrite(&curr_player, sizeof(struct leaderboard_stats), 1, fp);
+      printf("Adding to a new player in leaderboard %s wins: %d losses: %d\n", username, curr_player.wins, curr_player.losses);
       found = 1;
       break;
     }
@@ -39,6 +40,7 @@ void write_stats(int wol, char username[500]){
     curr_player.username[499] = '\0';
     if(wol == TOURNAMENT_WIN) curr_player.wins++;
     else curr_player.losses++;
+    printf("Creating a new player in leaderboard %s wins: %d losses: %d\n", username, curr_player.wins, curr_player.losses);
     fwrite(&curr_player, sizeof(struct leaderboard_stats), 1, fp);
   }
   fclose(fp);

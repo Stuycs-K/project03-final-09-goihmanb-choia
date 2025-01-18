@@ -46,6 +46,9 @@ Fixed all the .h headers, cleaned up some code - remove some print statements, a
 Draws now rematch - 15 mins
 Group ID 7
 
+### 2024-01-17 - Working on leaderboard
+Created a leaderboard system that writes to a local file, but it double counts some losses - 40 mins.
+
 ## Benjamin Goihman
 
 ### 2025-01-06 - Work on PROPOSAL.md
