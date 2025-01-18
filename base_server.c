@@ -52,6 +52,32 @@ void write_stats(int wol, char username[500]){
   fclose(fp);
 }
 
+void handle_disconnect(int w_ind, int l_ind, int to_win, int to_lose, int from_lose, int matches, char usernames[100][500], struct game_move* move) {
+  printf("Player %s disconnected\n", usernames[l_ind]);
+  move->won = MOVE_WIN;
+  if(matches == 1) {
+    move->won = TOURNAMENT_WIN;
+    write_stats(TOURNAMENT_WIN, usernames[w_ind]);
+  }
+  write_stats(TOURNAMENT_LOSE, usernames[l_ind]);
+  write(to_win, move, GS);
+  close(to_lose);
+  close(from_lose);
+}
+
+void handle_win(int w_ind, int l_ind, int to_win, int to_lose, int from_lose, int matches, char usernames[100][500], struct game_move* move) {
+  if(matches == 1) {
+    move->won = TOURNAMENT_WIN;
+    write_stats(TOURNAMENT_WIN, usernames[w_ind]);
+  }
+  write_stats(TOURNAMENT_LOSE, usernames[l_ind]);
+  write(to_win, move, GS);
+  move->won = MOVE_LOSE;
+  if(write(to_lose, move, GS) <= 0) err();
+  close(to_lose);
+  close(from_lose);
+}
+
 int play_game(int frm1, int frm2, int to1, int to2, int p1_ind, int p2_ind, int matches, char usernames[100][500]){
     struct game_move game_move_array[2];
     game_move_array[0].ismove = YOUR_TURN;
@@ -63,44 +89,27 @@ int play_game(int frm1, int frm2, int to1, int to2, int p1_ind, int p2_ind, int 
     struct game_move curr_move;
 
     while(1) {
-      if(read(frm1, &curr_move, GS) < 0) err();
+      // player 2 wins from player 1 disconnecting
+      if(read(frm1, &curr_move, GS) <= 0) {
+        handle_disconnect(p2_ind, p1_ind, to2, to1, frm1, matches, usernames, &curr_move);
+      }
       // player 1 wins
       if(curr_move.won == MOVE_WIN) {
-        if(matches == 1) {
-          curr_move.won = TOURNAMENT_WIN;
-          write_stats(TOURNAMENT_WIN, usernames[p1_ind]);
-        }
-        write_stats(TOURNAMENT_LOSE, usernames[p2_ind]);
-        write(to1, &curr_move, GS);
-        curr_move.won = MOVE_LOSE;
-        if(write(to2, &curr_move, GS) < 0) err();
-        close(to2);
-        close(frm2);
+        handle_win(p1_ind, p2_ind, to1, to2, frm2, matches, usernames, &curr_move);
         return 0;
       }
-      if(write(to2, &curr_move, GS) < 0) err();
-      if(read(frm2, &curr_move, GS) < 0) err();
+      if(write(to2, &curr_move, GS) <= 0) err();
+      // player 1 wins from player 2 disconnecting
+      if(read(frm2, &curr_move, GS) <= 0) {
+        handle_disconnect(p1_ind, p2_ind, to1, to2, frm2, matches, usernames, &curr_move);
+      }
       // player 2 wins
         if (curr_move.won == MOVE_WIN) {
-            if(matches == 1) {
-              curr_move.won = TOURNAMENT_WIN;
-              write_stats(TOURNAMENT_WIN, usernames[p2_ind]);
-            }
-            write_stats(TOURNAMENT_LOSE, usernames[p1_ind]);
-            write(to2, &curr_move, GS);
-            curr_move.won = MOVE_LOSE;
-            if(write(to1, &curr_move, GS) < 0) err();
-            close(to1);
-            close(frm1);
+            handle_win(p2_ind, p1_ind, to2, to1, frm1, matches, usernames, &curr_move);
             return 1;
         }
-      if(write(to1, &curr_move, GS) < 0) err();
+      if(write(to1, &curr_move, GS) <= 0) err();
     }
-    close(frm1);
-    close(frm2);
-    close(to1);
-    close(to2);
-    return 0;
 }
 
 
