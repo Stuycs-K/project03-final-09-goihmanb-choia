@@ -6,14 +6,18 @@ char username[500];
 int ties = 0;
 // initialized with srand in main
 int max_ties = 0;
-//
-// static void sighandler(int signo) {
-//   // if (signo == SIGINT) {
-//   //   // sleep(1);
-//   //   // display_leaderboard();
-//   //   // exit(-1);
-//   // }
-// }
+int to_server;
+int from_server;
+
+static void sighandler(int signo) {
+  if (signo == SIGINT) {
+    sleep(1);
+    display_leaderboard();
+    close(to_server);
+    close(from_server);
+    exit(-1);
+  }
+}
 
 // return the status for the game to be used in game_loop after reading from server
 int status_check(int status) {
@@ -58,16 +62,10 @@ int game_loop(int to_server, int from_server, pid_t my_pid) {
     int status = status_check(move.won);
     if(status != MOVE_REGULAR && status != MOVE_TIE) return status;
     board[move.row][move.col] = opp_character;
-    // if(status == MOVE_TIE) {
-    //   init_board(board);
-    //   ties++;
-    //   if (ties>max_ties){
-    //       printf("Too many ties, you got lucky and won! (from gameloop)\n");
-    //       move.won = MOVE_WIN;
-    //       write(to_server,&move,GS);
-    //       return MOVE_WIN;
-    //   }
-    // }
+    if(status == MOVE_TIE) {
+      init_board(board);
+      ties++;
+    }
     format_brd(board, display);
     write_to_server(move, board, to_server, my_character);
   }
@@ -150,9 +148,8 @@ int write_to_server(struct game_move move, int (*board)[3], int to_server, int m
 }
 
 int main() {
-    // signal(SIGINT, sighandler);
-    int to_server;
-    int from_server;
+    signal(SIGINT, sighandler);
+
     pid_t my_pid = getpid();
     from_server = client_handshake(&to_server);
     printf("Enter username: ");

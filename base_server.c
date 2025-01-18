@@ -156,7 +156,7 @@ int main() {
     int round = 1;
     int *active_players = calloc(100, sizeof(int));
     int alive_state = 0;
-    int max_players = 2;
+    int max_players = 3;
     char usernames[100][500];
     int byes[9] = {
       0, 0, 0, 1, 0, 3, 2, 1, 0
