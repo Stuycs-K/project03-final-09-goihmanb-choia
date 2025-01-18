@@ -215,7 +215,7 @@ void display_leaderboard () {
   }
   struct leaderboard_stats player;
   printf("\nLEADERBOARD\n");
-  printf("Username%16sWins%4sLosses\n", "", "");
+  printf("Username%12sWins%4sLosses\n", "", "");
   printf("================================================\n");
   while(fread(&player, sizeof(struct leaderboard_stats), 1, fp) == 1) {
     printf("%-20s%-8d%d\n\n", player.username, player.wins, player.losses);

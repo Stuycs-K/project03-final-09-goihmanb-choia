@@ -23,6 +23,8 @@ void write_stats(int wol, char username[500]){
   FILE * fp = fopen(LEADERBOARD_FILE, "r+b");
   if(fp == NULL) fp = fopen(LEADERBOARD_FILE, "w+b");
   struct leaderboard_stats curr_player;
+  curr_player.wins = 0;
+  curr_player.losses = 0;
   int found = 0;
   while(fread(&curr_player, sizeof(struct leaderboard_stats), 1, fp) == 1) {
     if(strcmp(username, curr_player.username) == 0) {
@@ -36,12 +38,16 @@ void write_stats(int wol, char username[500]){
     }
   }
   if(found == 0) {
-    strncpy(curr_player.username, username, 499);
-    curr_player.username[499] = '\0';
-    if(wol == TOURNAMENT_WIN) curr_player.wins++;
-    else curr_player.losses++;
-    printf("Creating a new player in leaderboard %s wins: %d losses: %d\n", username, curr_player.wins, curr_player.losses);
-    fwrite(&curr_player, sizeof(struct leaderboard_stats), 1, fp);
+    fseek(fp, 0, SEEK_END);
+    struct leaderboard_stats new_player;
+    new_player.wins = 0;
+    new_player.losses = 0;
+    strncpy(new_player.username, username, 499);
+    new_player.username[499] = '\0';
+    if(wol == TOURNAMENT_WIN) new_player.wins++;
+    else new_player.losses++;
+    printf("Creating a new player in leaderboard %s wins: %d losses: %d\n", username, new_player.wins, new_player.losses);
+    fwrite(&new_player, sizeof(struct leaderboard_stats), 1, fp);
   }
   fclose(fp);
 }
