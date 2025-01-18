@@ -84,6 +84,10 @@ int play_game(int frm1, int frm2, int to1, int to2, int p1_ind, int p2_ind, int 
     game_move_array[0].msg_type = O;
     game_move_array[1].ismove = OPPONENT_TURN;
     game_move_array[1].msg_type = X;
+    int flags = fcntl(to2, F_GETFL);
+    fcntl(to2, F_SETFL, flags | O_NONBLOCK);
+    flags = fcntl(to1, F_GETFL);
+    fcntl(to1, F_SETFL, flags | O_NONBLOCK);
     if(write(to1, &game_move_array[0],GS) < 0) handle_disconnect(p2_ind, p1_ind, to2, to1, frm1, matches, usernames, &game_move_array[0]);
     if(write(to2, &game_move_array[1],GS) < 0) handle_disconnect(p1_ind, p2_ind, to1, to2, frm2, matches, usernames, &game_move_array[1]);
     struct game_move curr_move;
@@ -100,11 +104,13 @@ int play_game(int frm1, int frm2, int to1, int to2, int p1_ind, int p2_ind, int 
         return P1WIN;
       }
       // player 1 wins from player 2 leaving
+      printf("Attempting to write to player 2...\n");
       if(write(to2, &curr_move, GS) <= 0) {
         handle_disconnect(p1_ind, p2_ind, to1, to2, frm2, matches, usernames, &curr_move);
         return P1WIN;
       }
       // player 1 wins from player 2 disconnecting
+      printf("Attempting to read from player 2...\n");
       if(read(frm2, &curr_move, GS) <= 0) {
         handle_disconnect(p1_ind, p2_ind, to1, to2, frm2, matches, usernames, &curr_move);
         return P1WIN;
@@ -150,7 +156,7 @@ int main() {
     int round = 1;
     int *active_players = calloc(100, sizeof(int));
     int alive_state = 0;
-    int max_players = 3;
+    int max_players = 2;
     char usernames[100][500];
     int byes[9] = {
       0, 0, 0, 1, 0, 3, 2, 1, 0
@@ -227,6 +233,7 @@ int main() {
             pid_t wpid = wait(&status);
             if (WIFEXITED(status)) {
                 int winner_idx = WEXITSTATUS(status);
+                printf("Winner was of index %d\n", winner_idx);
                 active_players[winner_idx] = alive_state;
                 players_remaining--;
             }
@@ -241,7 +248,7 @@ int main() {
             }
         }
         round++;
-        if(round == 2) break; //DEBUGprint, DELETE
+        if(round == 3) break; //DEBUGprint, DELETE
         printf("After byes, players_remaining: %d\n", players_remaining);
         printf("Players remaining %d\n", players_remaining);
     }// while (players_remaining > 1)
