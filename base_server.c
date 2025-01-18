@@ -64,6 +64,7 @@ int play_game(int frm1, int frm2, int to1, int to2, int p1_ind, int p2_ind, int 
 
     while(1) {
       if(read(frm1, &curr_move, GS) < 0) err();
+      // player 1 wins
       if(curr_move.won == MOVE_WIN) {
         if(matches == 1) {
           curr_move.won = TOURNAMENT_WIN;
@@ -79,6 +80,7 @@ int play_game(int frm1, int frm2, int to1, int to2, int p1_ind, int p2_ind, int 
       }
       if(write(to2, &curr_move, GS) < 0) err();
       if(read(frm2, &curr_move, GS) < 0) err();
+      // player 2 wins
         if (curr_move.won == MOVE_WIN) {
             if(matches == 1) {
               curr_move.won = TOURNAMENT_WIN;

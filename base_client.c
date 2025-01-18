@@ -4,8 +4,15 @@
 
 char username[500];
 int ties = 0;
-int max_ties = 3;
+// initialized with srand in main
+int max_ties = 0;
 // return the status for the game to be used in game_loop after reading from server
+
+static void sighandler(int signo) {
+  if (signo == SIGINT) {
+    exit(1);
+  }
+}
 int status_check(int status) {
   if(status == MOVE_LOSE) {
     printf("I lost, exiting\n");
@@ -124,6 +131,7 @@ int write_to_server(struct game_move move, int (*board)[3], int to_server, int m
   move.col = c - 1;
   board[r - 1][c - 1] = my_character;
   move.won = checkforcond(my_character, board, move.row, move.col);
+  // if the opponent sends a tie, that means that they lost the 50/50, so this client wins.
   if(move.won == MOVE_TIE){
     init_board(board);
     ties++;
@@ -139,6 +147,7 @@ int write_to_server(struct game_move move, int (*board)[3], int to_server, int m
 }
 
 int main() {
+    signal(SIGINT, sighandler);
     int to_server;
     int from_server;
     pid_t my_pid = getpid();
@@ -153,6 +162,9 @@ int main() {
       exit(1);
     }
 
+    srand(time(NULL));
+    // random number of ties so random chance to win after a tie.
+    max_ties = rand() % 4;
     int rd = 0;
     while(1) {
       int bye = 1;
