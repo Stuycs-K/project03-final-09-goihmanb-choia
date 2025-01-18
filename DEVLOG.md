@@ -49,6 +49,10 @@ Group ID 7
 ### 2024-01-17 - Working on leaderboard
 Created a leaderboard system that writes to a local file, but it double counts some losses - 40 mins.
 
+### 2024-01-18 - Fixed leaderboard, added server handling when clients exit, and fixed draws with multiple players
+Fixed the leaderboard to keep track of stats. (20 mins)
+Added error handling when clients exit with read/write in server, and lets the other player win. (90 mins)
+Fixed draws with multiple players so that tournament matchmaking works (30 mins)
 ## Benjamin Goihman
 
 ### 2025-01-06 - Work on PROPOSAL.md

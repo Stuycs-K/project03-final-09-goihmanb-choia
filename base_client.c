@@ -11,7 +11,6 @@ int from_server;
 
 static void sighandler(int signo) {
   if (signo == SIGINT) {
-    sleep(1);
     display_leaderboard();
     close(to_server);
     close(from_server);

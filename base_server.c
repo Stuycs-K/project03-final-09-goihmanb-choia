@@ -11,6 +11,9 @@ void sighandler(int signo) {
         remove(WKP);
         exit(0);
     }
+    if (signo == SIGPIPE) {
+      return;
+    }
 }
 
 void err() {
@@ -149,6 +152,7 @@ void set_random_index(int ary[], int n, int max) {
 
 int main() {
     signal(SIGINT, sighandler);
+    signal(SIGPIPE, sighandler);
     srand(time(NULL));
     int frm[100];
     int to[100];
