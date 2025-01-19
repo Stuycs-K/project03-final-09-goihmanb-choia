@@ -113,6 +113,12 @@ int write_to_server(struct game_move move, int (*board)[3], int to_server, int m
   char *endptr;
   int r, c;
   while(1) {
+    if(my_character==X){
+      printf("You are X\n");
+    }
+    else{
+      printf("You are O\n");
+    }
     printf("Enter the row, from 1 to 3: \n");
     scanf("%d", &r);
     printf("Enter the column, from 1 to 3: \n");
