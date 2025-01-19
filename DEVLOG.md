@@ -95,5 +95,5 @@ Work on adding byes and fix loop for byes occurs - 40 min
 
 ### 2025-01-18 - Keep track of players
 Add a print statemnt for who you after each round - 3 min
-
+Refactor code - 3 min
 

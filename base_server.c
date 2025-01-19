@@ -190,10 +190,11 @@ int main() {
     while (players_remaining > 1) {
         printf("\n=== Round %d ===\n", round);
         int matches = (players_remaining+1) / 2;
-        int skips[byes[player_count]];
+        int byesn = byes[player_count];
+        int skips[byesn];
         if (round == 1){
-            set_random_index(skips,byes[player_count],player_count);
-            for (int i = 0; i < byes[player_count]; i++){
+            set_random_index(skips,byesn,player_count);
+            for (int i = 0; i < byesn; i++){
                 active_players[skips[i]] = -11;
             }
             int bye = BYE;
@@ -244,7 +245,7 @@ int main() {
         }
         printf("After matches, players_remaining: %d\n", players_remaining);
         if (round==1){
-            for (int i = 0; i < byes[player_count]; i++){
+            for (int i = 0; i < byesn; i++){
               if(active_players[skips[i]] == -11) {
                 active_players[skips[i]] = alive_state;
                 players_remaining++;
