@@ -66,12 +66,34 @@ added correct imports and other needed funcs for base server and client - 8 min
 ### 2025-01-08 - Work tic tac toe formatting
 added formattig and prinint of the tictactoe board - 10 min
 
-### 2025-01-09 - Rember to add
-
+### 2025-01-09 - Print board and client tracking
+Worked on fixing tracking the cleints - 5 min
+Added board pritning - 10 min
 
 ### 2025-01-10 - Worked on forking server
-allowed for multiple clients to play at once on subservers and then subserver with exit code return winner
+allowed for multiple clients to play at once on subservers and then subserver with exit code return winner  - 40 min
 
 ### 2025-01-11 - Worked on forking server
 First attempt at matchmaking the players, inclduing routing users to play against each other.
 Fix keeping track of alive players and use new method for that.
+
+### 2025-01-12 - Matchmaking
+Continue working on matchmaking players and work on end game conditions - 25
+
+### 2025-01-14 - Usernames
+Add username to clinets - 5
+Fix column printing - 5 min
+
+### 2025-01-15 - Usernames
+add sending clients username to server - 15 min
+
+### 2025-01-16 - Byes
+Add byes when non even amount of players - 40 min
+
+### 2025-01-17 - Byes
+Work on adding byes and fix loop for byes occurs - 40 min
+
+### 2025-01-18 - Keep track of players
+Add a print statemnt for who you after each round - 3 min
+
+
