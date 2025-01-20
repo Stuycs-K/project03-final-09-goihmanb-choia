@@ -94,7 +94,7 @@ Fix column printing - 5 min
 add sending clients username to server - 20 min
 
 ### 2025-01-16 - Byes
-Add byes when non even amount of players - 50 min
+Add byes when non even amount of players - 40 min
 
 ### 2025-01-17 - Byes and Ties
 Work on adding byes and fix loop for byes occurs - 40 min
