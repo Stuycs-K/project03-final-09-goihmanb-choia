@@ -11,6 +11,7 @@ int from_server;
 
 static void sighandler(int signo) {
   if (signo == SIGINT) {
+    sleep(1);
     display_leaderboard();
     close(to_server);
     close(from_server);
@@ -21,19 +22,19 @@ static void sighandler(int signo) {
 // return the status for the game to be used in game_loop after reading from server
 int status_check(int status) {
   if(status == MOVE_LOSE) {
-    printf("I lost, exiting\n");
+    printf("\x1b[1;31mI lost\x1b[0m\n");
     return MOVE_LOSE;
   }
   if(status == MOVE_TIE) {
-    printf("Tie, rematching\n");
+    printf("\x1b[1;31mTie, rematching\x1b[0m\n");
     return MOVE_TIE;
   }
   if(status == TOURNAMENT_WIN) {
-    printf("I win everything!!\n");
+    printf("\x1b[1;31mI won the tournament!!\x1b[0m\n");
     return TOURNAMENT_WIN;
   }
   if(status == MOVE_WIN) {
-    printf("I win\n");
+    printf("\x1b[1;31mI win the round\x1b[0m\n");
     return MOVE_WIN;
   }
   return MOVE_REGULAR;
@@ -119,9 +120,9 @@ int write_to_server(struct game_move move, int (*board)[3], int to_server, int m
     else{
       printf("You are O\n");
     }
-    printf("Enter the row, from 1 to 3: \n");
+    printf("\x1b[1;31mEnter the row, from 1 to 3: \x1b[0m\n");
     scanf("%d", &r);
-    printf("Enter the column, from 1 to 3: \n");
+    printf("\x1b[1;31mEnter the column, from 1 to 3: \x1b[0m\n");
     scanf("%d", &c);
     if(r < 1 || r > 3 || c < 1 || c > 3) {
       printf("Invalid index\n");
@@ -142,7 +143,7 @@ int write_to_server(struct game_move move, int (*board)[3], int to_server, int m
     init_board(board);
     ties++;
     if (ties>max_ties){
-        printf("Too many ties, you got lucky and won!\n");
+        printf("\x1b[1;31mToo many ties, you got lucky and won!\x1b[0m\n");
         move.won = MOVE_WIN;
         write(to_server,&move,GS);
         return MOVE_REGULAR; // For logic - i don't want to exit, because i need to read from the server if my win advances me or if i won the whole thing.
@@ -157,7 +158,7 @@ int main() {
 
     pid_t my_pid = getpid();
     from_server = client_handshake(&to_server);
-    printf("Enter username: ");
+    printf("\x1b[1;31mEnter username: \x1b[0m");
     fgets(username,500,stdin);
     username[strlen(username) - 1] = '\0';
     // write(to_server,username, 500);
@@ -232,10 +233,10 @@ void display_leaderboard () {
   }
   struct leaderboard_stats player;
   printf("\nLEADERBOARD\n");
-  printf("Username%12sWins%4sLosses\n", "", "");
+  printf("Username%12sTournament Wins%4sLosses\n", "", "");
   printf("================================================\n");
   while(fread(&player, sizeof(struct leaderboard_stats), 1, fp) == 1) {
-    printf("%-20s%-8d%d\n\n", player.username, player.wins, player.losses);
+    printf("%-20s%-19d%d\n\n", player.username, player.wins, player.losses);
   }
   fclose(fp);
 }

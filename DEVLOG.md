@@ -53,6 +53,10 @@ Created a leaderboard system that writes to a local file, but it double counts s
 Fixed the leaderboard to keep track of stats. (20 mins)
 Added error handling when clients exit with read/write in server, and lets the other player win. (90 mins)
 Fixed draws with multiple players so that tournament matchmaking works (30 mins)
+
+### 2024-01-20 - Cleaning up and editing readme
+Cleaning up code and fixing print statements, adding some colors and changing server to get input for number of players - 15 mins
+
 ## Benjamin Goihman
 
 ### 2025-01-06 - Work on PROPOSAL.md
@@ -96,4 +100,3 @@ Work on adding byes and fix loop for byes occurs - 40 min
 ### 2025-01-18 - Keep track of players
 Add a print statemnt for who you after each round - 3 min
 Refactor code - 3 min
-
