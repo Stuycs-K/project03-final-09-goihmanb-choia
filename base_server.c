@@ -257,7 +257,6 @@ int main() {
             }
         }
         round++;
-        if(round == 3) break; //DEBUGprint, DELETE
         printf("After byes, players_remaining: %d\n", players_remaining);
         printf("Players remaining %d\n", players_remaining);
     }// while (players_remaining > 1)
