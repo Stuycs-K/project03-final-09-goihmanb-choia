@@ -77,12 +77,11 @@ Added board pritning - 10 min
 ### 2025-01-10 - Worked on forking server
 allowed for multiple clients to play at once on subservers and then subserver with exit code return winner  - 40 min
 
-### 2025-01-11 - Worked on forking server
-First attempt at matchmaking the players, inclduing routing users to play against each other.
-Fix keeping track of alive players and use new method for that.
 
 ### 2025-01-12 - Matchmaking
-Continue working on matchmaking players and work on end game conditions - 25
+Set up matchmaking the players (server side), inclduing routing users to play against each other. - 40 min
+Fix keeping track of alive players and use new method for that. - 10 min
+Continue working on matchmaking players and work on end game conditions - 20 min
 
 ### 2025-01-14 - Usernames
 Add username to clinets - 5
@@ -96,7 +95,11 @@ Add byes when non even amount of players - 50 min
 
 ### 2025-01-17 - Byes
 Work on adding byes and fix loop for byes occurs - 40 min
+Fix client side loop as well as server side, allow for players to skip game loop when on bye - 10 min
 
 ### 2025-01-18 - Keep track of players
 Add a print statemnt for who you after each round - 3 min
 Refactor code - 3 min
+
+### 2025-01-20 - Fix errors
+Fix compile error in client - 2 min
