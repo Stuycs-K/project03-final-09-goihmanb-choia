@@ -104,3 +104,4 @@ Refactor code - 3 min
 
 ### 2025-01-20 - Fix errors
 Fix compile error in client - 2 min
+Add leaderboard make target - 5 min
