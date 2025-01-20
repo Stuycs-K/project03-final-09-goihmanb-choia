@@ -84,7 +84,7 @@ Fix keeping track of alive players and use new method for that. - 10 min
 Continue working on matchmaking players and work on end game conditions - 20 min
 
 ### 2025-01-14 - Usernames
-Add username to clinets - 5
+Add username to clinets - 5 min
 Fix column printing - 5 min
 
 ### 2025-01-15 - Usernames
@@ -93,9 +93,10 @@ add sending clients username to server - 20 min
 ### 2025-01-16 - Byes
 Add byes when non even amount of players - 50 min
 
-### 2025-01-17 - Byes
+### 2025-01-17 - Byes and Ties
 Work on adding byes and fix loop for byes occurs - 40 min
 Fix client side loop as well as server side, allow for players to skip game loop when on bye - 10 min
+Work on limiting max amount of ties - 30 min
 
 ### 2025-01-18 - Keep track of players
 Add a print statemnt for who you after each round - 3 min
