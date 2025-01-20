@@ -1,7 +1,6 @@
 #include "pipe_networking.h"
 #include "game.h"
 #include "base_client.h"
-#include <signal.h>
 
 char username[500];
 int ties = 0;
