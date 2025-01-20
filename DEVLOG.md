@@ -5,29 +5,29 @@ This document must be updated daily by EACH group member.
 ## Andrew Choi
 
 ### 2024-01-06 - Work on README.md and PROPOSAL.md
-Added project description to README.md and filled out project intentions, intended usage, and intended pacing for PROPOSAL.md
+Added project description to README.md and filled out project intentions, intended usage, and intended pacing for PROPOSAL.md - 10 mins
 
 ### 2024-01-07 - Headers and makefile
 Worked on function headers and added the .h files - 15 minutes
 Created makefile - 15 minutes
 
 ### 2024-01-08 - Figure out server and subserver configuration
-Worked on planning out the communication for the tournament style game with the main server and subserver - 40 mins
+Worked on planning out the communication for the tournament style game with the main server and sub server - 40 mins
 
-### 2024-01-09 - Seever client interaction
-Enabled communication between the two clients through a server, where a client knows if it is it's turn, then sends a move to the server which sends the move to the other client.
+### 2024-01-09 - Server client interaction
+Enabled communication between the two clients through a server, where a client knows if it is it's turn, then sends a move to the server which sends the move to the other client. - 30 minutes
 
 ### 2024-01-10 - Server client constant communication
 Enabled the clients to constantly send moves to each other until one exits through a main server - 20 mins.
-Worked on sending game moves and storing and displaying the board for each client.
+Worked on sending game moves and storing and displaying the board for each client. - 20 mins
 
 ### 2024-01-10 - Client gameplay
-Clients can now take user input to send moves to the other client.
-Clients also display the move, now need to add game logic and index checking
+Clients can now take user input to send moves to the other client. 15 mins
+Clients also display the move, now need to add game logic and index checking - 10 mins
 Also need to add exit code for winner
 
 ### 2024-01-13 - Game logic and sending wins to server
-Clients know if they've won, and will send that message to the server
+Clients know if they've won, and will send that message to the server - 10 mins
 When the server gets this message, it prints which player wins and attempts to match them up for the next round. - 30 mins
 
 ### 2024-01-14 - Bounds checking for game and telling client if they won or lost
