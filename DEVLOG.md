@@ -83,6 +83,9 @@ Set up matchmaking the players (server side), inclduing routing users to play ag
 Fix keeping track of alive players and use new method for that. - 10 min
 Continue working on matchmaking players and work on end game conditions - 20 min
 
+### 2025-01-13
+Sick ):
+
 ### 2025-01-14 - Usernames
 Add username to clinets - 5 min
 Fix column printing - 5 min
