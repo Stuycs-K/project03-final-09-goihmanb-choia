@@ -12,3 +12,4 @@ A tic tac toe game, with options to play 1v1’s or in a tournament style round,
 ### Instructions:
 
 Run **make compile** then **make server**. **Input** the number of players to be in the tournament, from 2 - 8 players. Launch a new terminal instance for each player, and run **make client**. **Input** the username, which will be displayed at the end of the game on the leaderboard (case sensitive). Enter the row then column to play a move. Ties end after 1 - 4 rounds, with a random winner. If a client exits, it may require the opponent to enter a move before registering as a loss. 
+To see the leaderboard run **make leaderboard**
