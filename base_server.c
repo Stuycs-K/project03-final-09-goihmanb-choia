@@ -160,14 +160,18 @@ int main() {
     int round = 1;
     int *active_players = calloc(100, sizeof(int));
     int alive_state = 0;
-    int max_players = 3;
+    int max_players = 0;
+    printf("\x1b[1;31mEnter the number of players for the tournament, between 2 and 8 players.\x1b[0m\n");
+    scanf("%d", &max_players);
+    max_players = max_players < 2 ? 2 : max_players;
+    max_players = max_players > 8 ? 8 : max_players;
     char usernames[100][500];
     int byes[9] = {
       0, 0, 0, 1, 0, 3, 2, 1, 0
     };
     printf("Waiting for players to connect...\n");
     while (player_count < max_players) {
-        printf("\n[server] waiting for client connection %d/4\n", player_count + 1);
+        printf("\n[server] waiting for client connection %d/%d\n", player_count + 1, max_players);
         int from_client, to_client;
         from_client = server_handshake(&to_client);
         frm[player_count] = from_client;
