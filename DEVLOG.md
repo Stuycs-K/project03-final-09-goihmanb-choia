@@ -61,17 +61,18 @@ Cleaning up code and fixing print statements, adding some colors and changing se
 
 ### 2025-01-06 - Work on PROPOSAL.md
 Refreshed MD on proposal.md, adding clarifaciton and more specfic from the orginal google doc. 5 minutes
-added server code from my lab, as base for forking - 10 min
+added server code from my lab, as base for forking - 20 min
 
 ### 2025-01-07 - Work on skeleton code
-added client skeleton code and game skeleton - 20 min
+added client skeleton code and game skeleton - 40 min
 added correct imports and other needed funcs for base server and client - 8 min
 
-### 2025-01-08 - Work tic tac toe formatting
-added formattig and prinint of the tictactoe board - 10 min
+### 2025-01-08 - Work tic tac toe formatting and skeleton code
+added formatting and prining of the tictactoe board - 20 min
+More skeleton code for connecting server client cleint - 40 min
 
 ### 2025-01-09 - Print board and client tracking
-Worked on fixing tracking the cleints - 5 min
+Worked on fixing tracking the cleints - 20 min
 Added board pritning - 10 min
 
 ### 2025-01-10 - Worked on forking server
@@ -94,7 +95,7 @@ Fix column printing - 5 min
 add sending clients username to server - 20 min
 
 ### 2025-01-16 - Byes
-Add byes when non even amount of players - 40 min
+Add byes when non even amount of players, include set up the processes for it to work, modify client and server - 40 min
 
 ### 2025-01-17 - Byes and Ties
 Work on adding byes and fix loop for byes occurs - 40 min
