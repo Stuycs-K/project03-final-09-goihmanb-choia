@@ -17,7 +17,7 @@ server: srv
 client: cl
 	@./cl
 
-leaderboard: leaderboard
+leaderboard: leaderboard.dat
 	@./leaderboard
 
 base_client.o: base_client.c pipe_networking.h base_client.h game.h
